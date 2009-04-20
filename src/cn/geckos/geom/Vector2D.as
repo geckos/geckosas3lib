@@ -2,6 +2,8 @@ package cn.geckos.geom
 {
 import cn.geckos.api.ICloneable;
 import cn.geckos.utils.MathUtil;
+
+import flash.geom.Point;
     
 /**
  * 2D 向量，
@@ -74,7 +76,8 @@ public class Vector2D implements ICloneable
     /**
      * 获取向量的角度或弧度
      * 
-     * @param degrees 指定是否需要角度，默认为true
+     * @param degrees 指定是否返回角度值，默认为true
+     * 
      * @return 如果degrees为true，则返回向量的角度值，否则返回向量的弧度值
      */ 
     public function getAngle(degrees:Boolean=true):Number
@@ -112,8 +115,8 @@ public class Vector2D implements ICloneable
      */ 
     public function Vector2D(x:Number=0, y:Number=0)
     {
-        this.x = x;
-        this.y = y;
+        _x = x;
+        _y = y;
     }
     
     
@@ -133,7 +136,10 @@ public class Vector2D implements ICloneable
      */ 
     public function dist(v:Vector2D):Number
     {
-        return Math.sqrt(Math.pow(v.x-x, 2) + Math.pow(v.y-y, 2));
+        var dx:Number = v.x - x;
+        var dy:Number = v.y - y;
+        
+        return Math.sqrt(dx*dx + dy*dy);
     }
     
     /**

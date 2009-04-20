@@ -11,7 +11,7 @@ public class MathUtil
      */ 
     public static function rds2dgs(radians:Number):Number
     {
-        return radians * 180/Math.PI;
+        return fixAngle(radians * 180/Math.PI);
     }
 
     /**
