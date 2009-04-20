@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties version="1">
+  <includeClasses>
+    <classEntry path="cn.geckos.api.ICloneable"/>
+    <classEntry path="cn.geckos.geom.Vector2D"/>
+    <classEntry path="cn.geckos.utils.MathUtil"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
