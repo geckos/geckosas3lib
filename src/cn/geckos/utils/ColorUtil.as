@@ -6,9 +6,10 @@
 
 package cn.geckos.utils
 {
-import flash.geom.ColorTransform;
-import flash.filters.ColorMatrixFilter;
-import cn.geckos.utils.NumberUtil;
+
+//import flash.geom.ColorTransform;
+//import flash.filters.ColorMatrixFilter;
+//import cn.geckos.utils.NumberUtil;
 
 public final class ColorUtil
 {
@@ -49,28 +50,6 @@ public final class ColorUtil
 	public static const LIGHT_MEGENTA:uint  = 0xFF00FF;
 
 	
-	//---------------------------------
-	//
-	// 设置colorMatrixFilter的矩阵的常量值
-	//
-	//---------------------------------
-	
-	/**
-	*  用于设置colorMatrixFilter的矩阵中的红色乘值
-	*/
-	public static const RED_LUMINANCE:Number = .3086;
-	
-	/**
-	 * 用于设置colorMatrixFilter的矩阵中的绿色乘值
-	 */
-	public static const GREEN_LUMINANCE:Number = .6094;
-	
-	/**
-	 * 用于设置colorMatrixFilter的矩阵中的蓝色乘值
-	 */
-	public static const BLUE_LUMINANCE:Number = .0820;
-
-	
 	/**
 	 * 根据给出的r, g, b值返回一个24位的十六进制色彩值
 	 * @param	r
@@ -97,151 +76,11 @@ public final class ColorUtil
 	}
 	
 	/**
-	 * 去除饱和色(来自Mario Klingemann的ColorMatrix Class v1.2), "灰度"图像
-	 * 
-	 * @return 返回一个ColorMatrixFilter类对象
-	 */
-	public static function getDesaturateFilter():ColorMatrixFilter
-	{
-		var matrix:Array = [RED_LUMINANCE, GREEN_LUMINANCE, BLUE_LUMINANCE, 0, 0,
-		                    RED_LUMINANCE, GREEN_LUMINANCE, BLUE_LUMINANCE, 0, 0,
-							RED_LUMINANCE, GREEN_LUMINANCE, BLUE_LUMINANCE, 0, 0,
-							0,             0,               0,              1, 0];
-							
-		return new ColorMatrixFilter(matrix);
-	}
-	
-	/**
-	 * 设置亮度值(ColorMatrixFilter)
-	 * @param	value
-	 * @return  返回设置亮度后的ColorMatrixFilter对象
-	 */
-	public static function getBrightnessFilter(value:int = 100/*-100 - 100*/):ColorMatrixFilter
-	{
-		var value:int = Math.max(Math.min(100, value), -100);
-		var matrix:Array = [];
-		matrix = matrix.concat([1, 0, 0, 0, value]);
-		matrix = matrix.concat([0, 1, 0, 0, value]);
-		matrix = matrix.concat([0, 0, 1, 0, value]);
-		matrix = matrix.concat([0, 0, 0, 1, 0]);
-		return new ColorMatrixFilter(matrix);
-	}
-
-	/**
-	 * 设置反相效果
-	 * @param	pic
-	 * @return  返回一个ColorTransform对象
-	 */
-	public static function getNegativeTransform():ColorTransform
-	{
-		var netaiveTransform:ColorTransform;
-		netaiveTransform = new ColorTransform( -1, -1, -1, 1, 255, 255, 255, 0);
-		return netaiveTransform;
-	}
-	
-	
-	/**
-	 * 设置色彩
-	 * @param	hex
-	 * @param	count
-	 * @return  返回给定色彩值容量的ColorTransform对象
-	 */
-	public static function getTintTransform(hex:uint, count:int/*0 - 100*/):ColorTransform
-	{
-		var tintform:ColorTransform;
-		
-		var r:uint = getRed(hex);
-		var g:uint = getGreen(hex);
-		var b:uint = getBlue(hex);
-		
-		if (count < 0) count = 0;
-		else if (count > 100) count = 100;
-		
-		var multiPlier:Number = 1 - (count / 100);
-		
-		var redOffset:Number = Math.round(r * (count / 100));
-		var greenOffset:Number = Math.round(g * (count / 100));
-		var blueOffset:Number = Math.round(b * (count / 100));
-		
-		tintform = new ColorTransform(multiPlier, 
-									  multiPlier, 
-									  multiPlier, 
-									  1, redOffset, greenOffset, blueOffset, 0);
-		
-		return tintform;
-	}
-	
-	/**
-	 * 设置亮度(ColorTransform)
-	 * @param	bright
-	 * @return  返回一个ColorTransform对象
- 	 */
-	public static function getLightnessTransform(bright:int = 100/*-100 - 100*/):ColorTransform
-	{
-		var cTransForm:ColorTransform;
-		var multiPlier:Number = bright / 100;
-		
-		if (multiPlier > 1) multiPlier = 1;
-		else if (multiPlier < -1) multiPlier = -1;
-		
-		var multiPlierPercent:Number = 1 - NumberUtil.getAbsolute(multiPlier);
-	
-		var offset:Number = 0;
-		
-		if (multiPlier > 0)
-		{
-			offset = multiPlier * 0xFF;
-		}
-		
-		cTransForm = new ColorTransform(multiPlierPercent, 
-										multiPlierPercent, 
-										multiPlierPercent,
-										1,
-										offset, offset, offset, 0);
-		return cTransForm;
-	}
-	
-	/**
-	 * 设置透明度
-	 * @param	alpha
-	 * @return  返回设置透明度的ColorTransform对象
-	 */
-	public static function getAlphaTransform(alpha:int/*0 - 100*/):ColorTransform
-	{
-		if (alpha < 0) alpha = 0;
-		else if (alpha > 100) alpha = 100;
-		
-		var alphaOffset:Number = NumberUtil.round(255 / 100 * alpha);
-		return new ColorTransform(1, 1, 1, 0, 0, 0, 0, alphaOffset);
-	}
-	
-	/**
-	 * 根据给定的r, g, b生成一个ColorTransform对象
-	 * @param	r
-	 * @param	g
-	 * @param	b
-	 * @return  返回一个ColorTransform对象
-	 */
-	public static function getRGBMixTransform(r:int, g:int, b:int, a:int = 0,
-											  					  rm:int = 1, 
-											  					  gm:int = 1, 
-											  					  bm:int = 1, 
-											  					  am:int = 1):ColorTransform
-	{
-		var redOffset:Number = Math.max(Math.min(r, 0xFF), 0);
-		var greenOffset:Number = Math.max(Math.min(g, 0xFF), 0);
-		var blueOffset:Number = Math.max(Math.min(b, 0xFF), 0);
-		var alphaOffset:Number = Math.max(Math.min(a, 0xFF), 0);
-		return new ColorTransform(rm, gm, bm, am, redOffset, greenOffset, blueOffset, alphaOffset);
-	}
-	
-	
-	/**
 	 * 获取hex的反相值
 	 * @param	hex
 	 * @return  返回色彩反相后的色彩值
 	 */
-	public static function setNegativeColor(hex:uint = 0xFFFF0000):uint
+	public static function reverseColor(hex:uint = 0xFFFF0000):uint
 	{
 		var alpha:uint = getAlpha(hex);
 		var red:uint = getRed(hex); 
@@ -251,30 +90,25 @@ public final class ColorUtil
 	}
 	
 	
+	
 	/**
 	 * 设置hex的亮度值
 	 * @param	hex
 	 * @param	bright
 	 * @return  设置色彩的亮度值(24位色)
+	 * 
+	 * 设置亮度偏移量(Bright offset)
 	 */
 	public static function setColorBrightness(hex:uint, bright:int/*-100 - 100*/):uint
 	{
 		bright = Math.round(255 / 100 * bright);//此数值需要修正(255)
-		var r:uint = Math.max(Math.min((hex >> 16 & 0xFF) + bright, 255), 0);
-		var g:uint = Math.max(Math.min((hex >> 8 & 0xFF) + bright, 255), 0);
-		var b:uint = Math.max(Math.min((hex & 0xFF) + bright, 255), 0);
+		var r:uint = Math.max(Math.min(getRed(hex) + bright, 255), 0);
+		var g:uint = Math.max(Math.min(getGreen(hex) + bright, 255), 0);
+		var b:uint = Math.max(Math.min(getBlue(hex) + bright, 255), 0);
 		return get24Hex(r, g, b);
 	}
 	
-	/**
-	 * 返回一个图像的初始状态
-	 * @return 返回ColorTransform对象的初始状态
-	 */
-	public static function setColorInitialize():ColorTransform
-	{
-		return new ColorTransform(1, 1, 1, 1, 0, 0, 0, 0);
-	}
-
+	
 	/**
 	 * 获取hex的透明度
 	 * @param	hex
@@ -329,6 +163,33 @@ public final class ColorUtil
 	}
 	
 	/**
+	 * 打印出单色的十六进制色彩值
+	 * @param	hex
+	 * @return  返回色彩值的字符串形式
+	 */
+	public static function dumpColorHexStr(hex:uint):String
+	{
+		var hexStr:String = hex.toString(16);
+		while ((6 - hexStr.length) > 0)
+		{
+			hexStr = "0" + hexStr;
+		}
+		return "0x" + hexStr.toUpperCase();
+	}
+	
+	/**
+	 * 返回色彩字符串的16进制的数值形式
+	 * @param	hexStr
+	 * @return
+	 */
+	public static function getColorHexFromStr(hexStr:String):uint
+	{
+	    return uint(parseInt(hexStr, 16));
+	}
+	
+	
+	
+	/**
 	 * 去除24位色ColorHex的红色部分, 并入insertRed的指定值
 	 * @param	colorHex
 	 * @param	insertRed
@@ -336,7 +197,7 @@ public final class ColorUtil
 	 * 
 	 * @default is 128
 	 */
-	public static function replace24RedChannel(colorHex:uint, insertRed:uint = 128):uint
+	public static function setRed24(colorHex:uint, insertRed:uint = 128):uint
 	{
 		return (colorHex & 0x00FFFF) | (insertRed << 16);
 	}
@@ -349,7 +210,7 @@ public final class ColorUtil
 	 * 
 	 * @default is 128
 	 */
-	public static function replace24BlueChannel(colorHex:uint, insertBlue:uint = 128):uint
+	public static function setBlue24(colorHex:uint, insertBlue:uint = 128):uint
 	{
 		return (colorHex & 0xFFFF00) | (insertBlue);
 	}
@@ -362,7 +223,7 @@ public final class ColorUtil
 	 * 
 	 * @default is 128
 	 */
-	public static function replace24GreenChannel(colorHex:uint, insertGreen:uint = 128):uint
+	public static function setGreen24(colorHex:uint, insertGreen:uint = 128):uint
 	{
 		return (colorHex & 0xFF00FF) | (insertGreen << 8);
 	}
@@ -375,7 +236,7 @@ public final class ColorUtil
 	 * 
 	 * @default is 128
 	 */
-	public static function replace32AlphaChannel(colorHex:uint, insertAlpha:uint = 128):uint
+	public static function setAlpha32(colorHex:uint, insertAlpha:uint = 128):uint
 	{
 		return (colorHex & 0x00FFFFFF) | (insertAlpha << 24);
 	}
@@ -388,7 +249,7 @@ public final class ColorUtil
 	 * 
 	 * @default is 128
 	 */
-	public static function replace32RedChannel(colorHex:uint, insertRed:uint = 128):uint
+	public static function setRed32(colorHex:uint, insertRed:uint = 128):uint
 	{
 		return (colorHex & 0xFF00FFFF) | (insertRed << 16);
 	}
@@ -401,7 +262,7 @@ public final class ColorUtil
 	 * 
 	 * @default is 128
 	 */
-	public static function replace32GreenChannel(colorHex:uint, insertGreen:uint = 128):uint
+	public static function setGreen32(colorHex:uint, insertGreen:uint = 128):uint
 	{
 		return (colorHex & 0xFFFF00FF) | (insertGreen << 8);
 	}
@@ -414,7 +275,7 @@ public final class ColorUtil
 	 * 
 	 * @default is 128
 	 */
-	public static function replace32BlueChannel(colorHex:uint, insertBlue:uint = 128):uint
+	public static function setBlue32(colorHex:uint, insertBlue:uint = 128):uint
 	{
 		return (colorHex & 0xFFFFFF00) | (insertBlue);
 	}
