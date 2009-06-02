@@ -8,6 +8,31 @@ package cn.geckos.utils
 {
 public final class NumberUtil
 {
+	//-----------------------------
+	//
+	//  常量
+	//
+	//-----------------------------
+	/**
+	 * 二进制(2)
+	 */
+    public static const NUMBER_BINARY:uint = 1 << 1;
+    
+	/**
+	 * 八进制(8)
+	 */
+    public static const NUMBER_OCTAL:uint = 1 << 3;
+    
+	/**
+	 * 十六进制(16)
+	 */
+    public static const NUMBER_HEXDECIMAL:uint = 1 << 4;
+    
+	/**
+	 * 十进制(10)
+	 */
+    public static const NUMBER_DECIMAL:uint = 10;
+	
     /**
     * 求取阶乘
     */
@@ -111,9 +136,9 @@ public final class NumberUtil
 	 * @param	convert
 	 * @return  把一个十进制数转换成一个指定进制的数
 	 */
-    public static function printConversionNum(num:uint, convert:uint):String
+    public static function printNumber(num:uint, convert:uint = 10):String
     {
-         if(convert == NumberType.NUMBER_DECIMAL) return num.toString(10);
+         if(convert == NumberUtil.NUMBER_DECIMAL) return num.toString(10);
 		 
          var value:Number = num;
          var resultAry:Array = new Array();
@@ -128,7 +153,7 @@ public final class NumberUtil
          for(var i:uint = resultAry.length - 1; i >= 0; i--)
          {
                 var tempStr:String = String(resultAry);
-                str += tempStr.length > 1 ?    String.fromCharCode(Number(tempStr) + 87) : tempStr;                                            
+                str += tempStr.length > 1 ? String.fromCharCode(Number(tempStr) + 87) : tempStr;                                            
          }
          return str.toUpperCase();
     }
