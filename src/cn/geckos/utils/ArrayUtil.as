@@ -8,7 +8,6 @@ package cn.geckos.utils
 {
 public final class ArrayUtil
 {
-	
 	/**
 	 * 执行插入排序
 	 * @param	ary
@@ -99,32 +98,6 @@ public final class ArrayUtil
 		}
 		return matchIndex;	
 	}
-    
-    /**
-	 * 执行冒泡排序
-	 * @param	ary  
-	 */
-     /*
-	public static function bubbleSort(ary:Array):void
-	{
-		var len:Number = ary.length;
-		for(var i:Number = 0; i<len; i++)
-		{
-			var isLoop:Boolean = false;
-			for(var j:Number = 0; j<len - i - 1; j++)
-			{
-				if(ary[j] > ary[j + 1])
-				{
-					var tempNum:Number = ary[j];
-					ary[j] = ary[j + 1];
-					ary[j + 1] = tempNum;
-					isLoop = true;
-				}
-			}
-			if(!isLoop) break;
-		}
-	}
-    */
 }
 }
 
