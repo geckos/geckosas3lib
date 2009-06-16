@@ -23,11 +23,11 @@ public final class ArrayUtil
 			isExchange = false;
 			for (var j:int = ary.length - 1; j > i; j--)
 			{
-				if (temps[j] < temps[j - 1])
+				if (ary[j] < ary[j - 1])
 				{
-					var temp:Number = temps[j];
-					temps[j] = temps[j - 1];
-					temps[j - 1] = temp;
+					var temp:Number = ary[j];
+					ary[j] = ary[j - 1];
+					ary[j - 1] = temp;
 					isExchange = true;
 				}
 			}
