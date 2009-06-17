@@ -19,7 +19,7 @@ public class  MillisecondTransform
 	 * @param	partition 符号
 	 * @return  00符号00形式或者00符号00符号00
 	 */
-	public static function millisecondToTime(time:Number = 0, partition:String = ":"):String
+	public static function secondToTime(time:Number = 0, partition:String = ":"):String
 	{
 		if (time == 0)
 		{
