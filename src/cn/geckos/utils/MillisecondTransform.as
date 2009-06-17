@@ -21,7 +21,7 @@ public class  MillisecondTransform
 	 * @param	time 秒数
 	 * @return
 	 */
-	public static function MillisecondToTime(time:Number = 0):String
+	public static function millisecondToTime(time:Number = 0):String
 	{
 		if (time == 0)
 		{
