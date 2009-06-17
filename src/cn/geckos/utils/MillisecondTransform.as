@@ -1,6 +1,5 @@
 ﻿package cn.geckos.utils 
-{
-	
+{	
 /**
  * ...
  * 
@@ -9,23 +8,22 @@
  */
 public class  MillisecondTransform
 {
-
 	public function MillisecondTransform()
 	{
 		
 		
 	}
-	
 	/**
-	 * 将秒数转换成00:00形式或者00:00:00
+	 * 将秒数转换成00符号00形式或者00符号00符号00
 	 * @param	time 秒数
-	 * @return
+	 * @param	partition 符号
+	 * @return  00符号00形式或者00符号00符号00
 	 */
-	public static function millisecondToTime(time:Number = 0):String
+	public static function millisecondToTime(time:Number = 0, partition:String = ":"):String
 	{
 		if (time == 0)
 		{
-			return  00 + ":" + 00;
+			return  00 + partition + 00;
 		}
 		var hours:int = time / 3600;//格式化输出格式
 		
@@ -46,15 +44,40 @@ public class  MillisecondTransform
 		if (seconds < 10) s = "0" + s;
 		
 		if (hours == 0)
-			return  m + ":" + s;
+			return  m + partition + s;
 		else
-			return  h + ":" + m + ":" + s;
+			return  h + partition + m + partition + s;
 	}
-	
-	private function toString(s:Number):String
+	/**
+	 * 00符号00或者00符号00符号00形式转换成毫秒数
+	 * @param	time  00符号00或者00符号00符号00形式
+	 * @param	partition  符号
+	 * @return  毫秒数显示的字符串
+	 * 
+	 * 用法1 trace(MillisecondTransform.timeToMillisecond("00:60:00")) 
+	 * 输出   216000 
+	 * 
+	 * 
+	 * 用法2 trace(MillisecondTransform.timeToMillisecond("00.60.00",".")) 
+	 * 输出   216000 
+	 */
+	public static function timeToMillisecond(time:String, partition:String = ":"):String
 	{
-		return "";
+		var ary:Array = time.split(partition);
+		if (ary.length <= 2) ary.unshift(0);
+		var timeStr:int
+		var index:uint = ary.length - 1;
+		for (var i:uint = 0; i < ary.length; i++)
+		{
+			if (i > 0 && ary[i] > 60)
+			{
+				return "error:time形式错误";
+			}
+			timeStr += ary[i] * 1000 * Math.pow(60, index);
+			index--;
+		}
+		//trace(timeStr);
+		return String(timeStr);
 	}
 }
-	
 }
