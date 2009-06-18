@@ -1,4 +1,4 @@
-package cn.geckos.utils
+﻿package cn.geckos.utils
 {
 public class MathUtil
 {
@@ -46,6 +46,21 @@ public class MathUtil
         
         return angle;
     }
+	
+	/**
+	 * 斜率公式
+	 * @param	x1 坐标点
+	 * @param	y1 
+	 * @param	x2
+	 * @param	y2
+	 * @return  相应的斜率
+	 */
+	public static function getSlope(x1:Number, y1:Number, x2:Number, y2:Number):Number
+	{
+		var slope:Number = (y1 - y2) / (x1 - x2);
+		return slope
+	}
+	
 
 }
 }
