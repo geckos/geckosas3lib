@@ -72,15 +72,11 @@ public final class StringUtil
 	 */
 	public static function trim(target:String):String
 	{
-		var startIndex:int = 0;
-		while(isWhiteSpace(target.charAt(startIndex)))
-			startIndex++;
-	
-		var endIndex:int = target.length - 1;
-		while(isWhiteSpace(target.charAt(endIndex)))
-			endIndex--;
-	
-		return target.slice(startIndex, endIndex + 1);
+		if (target == null)
+		{  
+			return null;  
+		}  
+		return rTrim(lTrim(target));
 	}
 	
 	
@@ -181,7 +177,7 @@ public final class StringUtil
         '<', '&lt;',
         '>', '&gt;',
         '"', '&quot;',
-        "'", '&#039;',
+        "'", '&039;',
         '®', '&reg;',
         '©', '&copy;',
         '™', '&trade;',
@@ -312,6 +308,87 @@ public final class StringUtil
         
         return str;
     }
+	
+	//是否是数值字符串;  
+	/**
+	 * 是否是数值字符串;  
+	 * @param	char 字符串
+	 * @return  是否是数值字符串
+	 */
+	public static function isNumber(char:String):Boolean
+	{  
+		if (char == null)
+		{  
+			return false;  
+		}  
+		return isDouble(char) || isInteger(char) || isHex(char); 
+	} 
+	
+	//是否为Double型数据;
+	/**
+	 * 
+	 * @param	char 字符串
+	 * @return	是否为Double型数据;
+	 */
+	public static function isDouble(char:String):Boolean 
+	{
+		var pattern:RegExp =/^[-\+]?\d+(\.\d+)?$/;
+		var result:Object = pattern.exec(char);
+		
+		return !(result == null);
+	}
+	
+	//Integer;
+	/**
+	 * 
+	 * @param	char 字符串
+	 * @return
+	 */
+	public static function isInteger(char:String):Boolean 
+	{
+		var pattern:RegExp =/^[-\+]?\d+$/;
+		var result:Object = pattern.exec(char);
+		
+		return !(result == null);
+	}
+	
+	//Hex; 是否为16进制
+	/**
+	 * 
+	 * @param	char 字符串
+	 * @return	是否为16进制
+	 */
+	public static function isHex(char:String):Boolean 
+	{
+		var pattern:RegExp =/^[0-9A-Fa-f]+$/;
+		var result:Object = pattern.exec(char);
+		
+		return !(result == null);
+	}
+	
+	//是否为Email地址;
+	/**
+	 *  
+	 * @param	char 字符串
+	 * @return  是否为Email地址;
+	 */
+	public static function isEmail(char:String):Boolean
+	{  
+		if (char == null)
+		{  
+			return false;  
+		}  
+		char = trim(char);
+		var pattern:RegExp = /(\w|[_.\-])+@((\w|-)+\.)+\w{2,4}+/;   
+		var result:Object = pattern.exec(char);  
+		
+		if (result == null) 
+		{  
+			return false;  
+		}  
+		return true;  
+	}  
+	
 }
 }
 
