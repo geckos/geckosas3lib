@@ -61,6 +61,31 @@ public class MathUtil
 		return slope
 	}
 	
+	/**
+	 * 已知3边求出某边对应的角的角度
+	 * CosC=(a^2+b^2-c^2)/2ab
+	 * CosB=(a^2+c^2-b^2)/2ac
+	 * CosA=(c^2+b^2-a^2)/2bc 
+	 * 
+	 * @param	a 边
+	 * @param	b 边
+	 * @param	c 边
+	 * @return  一个对象包含三个对应的角度
+	 */
+	public static function threeSidesMathAngle(a:Number,b:Number,c:Number):Object
+	{
+		var cosA:Number = (c * c + b * b - a * a) / (2 * b * c);
+		var A:Number = Math.round(MathUtil.rds2dgs(Math.acos(cosA)));
+		
+		var cosB:Number = (a * a + c * c - b * b) / (2 * a * c);
+		var B:Number = Math.round(MathUtil.rds2dgs(Math.acos(cosB)));
+		
+		var cosC:Number = (a * a + b * b - c * c) / (2 * a * b);
+		var C:Number = Math.round(MathUtil.rds2dgs(Math.acos(cosC)));
+		
+		return { "A":A, "B":B, "C":C };
+	}
+	
 
 }
 }
