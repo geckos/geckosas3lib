@@ -148,6 +148,49 @@ public final class ArrayUtil
 		return newAry;
 	}
 	
+	
+	/**
+	* 
+	* 返回2个数组中不同的部分
+	* 比如数组A = [1, 2, 3, 4, 6]
+	*     数组B = [0, 2, 1, 3, 4]
+	* 
+	* 返回[6, 0]
+	*/
+	public static function getDifferAry (aryA:Array, aryB:Array):Array
+	{
+		var ary:Array = aryA.concat(aryB);
+		var uObj:Object = new Object ();
+		var newAry:Array = new Array ();
+		for (var j:int = 0; j < ary.length; j++)
+		{
+			if (!uObj[ary[j]])
+			{
+				uObj[ary[j]] = new Object();
+				uObj[ary[j]].count = 0;
+				uObj[ary[j]].key = ary[j];
+				uObj[ary[j]].count++;
+			}
+			else
+			{
+				if(uObj[ary[j]] is Object)
+				{
+					uObj[ary[j]].count++;
+				}
+			}
+		}
+		for (var i:String in uObj)
+		{
+			if(uObj[i].count != 2)
+			{
+				newAry.unshift (uObj[i].key);
+			}
+		}
+		return newAry;
+	}
+
+	
+	
 	/**
 	 * 
 	 * @param	itemNum  数组长度
