@@ -63,7 +63,6 @@ public class  MillisecondTransform
 	 */
 	public static function timeToMillisecond(time:String, partition:String = ":"):String
 	{
-		
 		var ary:Array = time.split(partition);
 		if (ary.length <= 1) return "error:partition参数与输入不符";
 		if (ary.length <= 2) ary.unshift(0);
