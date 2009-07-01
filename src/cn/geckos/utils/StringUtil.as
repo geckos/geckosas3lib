@@ -282,26 +282,29 @@ public final class StringUtil
      */
     public static function format(str:String, ...args):String
     {
-        if( !args || args.length==0 ) {
+        if (!args || args.length==0) 
             return str;
-        }
         
         var isDictArg:Boolean = false;
         var sArgs:Object = args;
-        if( !(args[0] is String) ) {
+        if (!(args[0] is String)) 
+        {
             sArgs = args[0];
             isDictArg = true;
         }
         
         var pattern:RegExp = /(?<!\\)\{[^{}]*[^\\]\}/gim;
         
-        str = str.replace(pattern, function(match:String, ...args):String {
-            var key:* = match.substring(1, match.length - 1);
-            if( !isDictArg ) {
-                key = Number(key);
-            }
-            return sArgs[key];
-        } );
+        str = str.replace(pattern, 
+	        function(match:String, ...args):String 
+	        {
+	            var key:* = match.substring(1, match.length - 1);
+	            if (!isDictArg) 
+	                key = Number(key);
+	                
+	            return sArgs[key];
+	        }
+	    );
         
         str = str.replace(/\\{/gm, '{');
         str = str.replace(/\\}/gm, '}');
