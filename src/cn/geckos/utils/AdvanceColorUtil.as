@@ -47,11 +47,11 @@ public final class AdvanceColorUtil
 	
 	/**
 	 * 根据给定的范围设置反相效果
-	 * @param	num
-	 * @return
+	 * @param	num   范围 0 - 100
+	 * @return  
 	 * 此方法采用了flash设计面板中的高级色彩应用
 	 */
-	public static function setNegativeTransform(num:int/*0 - 100*/):ColorTransform
+	public static function setNegativeTransform(num:int):ColorTransform
 	{
 		if (num < 0) num = 0;
 		else if (num > 100) num = 100;
@@ -73,11 +73,11 @@ public final class AdvanceColorUtil
 
 	/**
 	 * 设置透明度
-	 * @param	alpha
+	 * @param	alpha   范围 0 - 100
 	 * @return  设置透明度的ColorTransform对象
 	 * 此方法实现了flash设计面板中的Alpha功能
 	 */
-	public static function setAlphaTransform(alpha:int/*0 - 100*/):ColorTransform
+	public static function setAlphaTransform(alpha:int):ColorTransform
 	{
 		if (alpha < 0) alpha = 0;
 		else if (alpha > 100) alpha = 100;
@@ -90,11 +90,11 @@ public final class AdvanceColorUtil
    /**
 	 * 设置色彩
 	 * @param	hex
-	 * @param	count
+	 * @param	count  范围 0 - 100
 	 * @return  设置给定色彩值容量的ColorTransform对象
 	 * 此方法实现了flash设计面板中的设置色彩(tint)的功能
 	 */
-	public static function setTintTransform(hex:uint, count:int/*0 - 100*/):ColorTransform
+	public static function setTintTransform(hex:uint, count:int):ColorTransform
 	{
 		var tintform:ColorTransform;
 		
@@ -119,10 +119,10 @@ public final class AdvanceColorUtil
 	/**
 	 * 
 	 * @param	hex
-	 * @param	count
+	 * @param	count  范围 0 - 100
 	 * @return  获得指定色彩的色彩量的色彩值
 	 */
-	public static function getTint(hex:uint, count:int/*0 - 100*/):uint
+	public static function getTint(hex:uint, count:int):uint
 	{
 		if (count < 0) count = 0;
 		else if (count > 100) count = 100;
@@ -136,11 +136,11 @@ public final class AdvanceColorUtil
 	
 	/**
 	 * 设置亮度(ColorTransform)
-	 * @param	bright
+	 * @param	bright   范围 -100 - 100
 	 * @return  返回一个ColorTransform对象
 	 * 此方法实现了flash设计面板中的设置亮度(lightness)的功能
  	 */
-	public static function setLightnessTransform(bright:int = 100/*-100 - 100*/):ColorTransform
+	public static function setLightnessTransform(bright:int = 100):ColorTransform
 	{
 		var cTransForm:ColorTransform;
 		var multiPlier:Number = bright / 100;
@@ -180,7 +180,7 @@ public final class AdvanceColorUtil
 	
 
 	/**
-	 * 根据给定的r, g, b生成一个ColorTransform对象
+	 * 根据给定的r, g, b生成一个ColorTransform对象 范围 0 - 100
 	 * @param	r
 	 * @param	g
 	 * @param	b
@@ -188,7 +188,7 @@ public final class AdvanceColorUtil
 	 * 此方法实现了flash设计面板中的设置色彩(tint)的功能, 给出r, g, b
 	 * count数值范围为0 - 100
 	 */
-	public static function setRGBMixTransform(r:int, g:int, b:int, count:uint/*0 - 100*/):ColorTransform
+	public static function setRGBMixTransform(r:int, g:int, b:int, count:uint):ColorTransform
 	{
 		if (count < 0) count = 0;
 		else if (count > 100) count = 100;
@@ -244,12 +244,12 @@ public final class AdvanceColorUtil
 
 	/**
 	 * 设置亮度值(ColorMatrixFilter)
-	 * @param	value
+	 * @param	value 范围 -100 - 100
 	 * @return  返回设置亮度后的ColorMatrixFilter对象
 	 * 
 	 * 设置亮度 (模拟flash设计面板中的滤镜中的调整颜色中的亮度)
 	 */
-	public static function setBrightnessFilter(value:int = 100/*-100 - 100*/):ColorMatrixFilter
+	public static function setBrightnessFilter(value:int = 100):ColorMatrixFilter
 	{
 		var value:int = Math.max(Math.min(100, value), -100);
 		var matrix:Array = [1, 0, 0, 0, value,
@@ -261,11 +261,11 @@ public final class AdvanceColorUtil
 
 	/**
 	 * 
-	 * @param	value
+	 * @param	value 范围 0 - 100
 	 * @return  
 	 * 通过ColorMatrixFilter来设置透明度
 	 */
-	public static function setAlphaFilter(value:int/*0 - 100*/):ColorMatrixFilter
+	public static function setAlphaFilter(value:int):ColorMatrixFilter
 	{
 		if (value < 0) value = 0;
 		else if (value > 100) value = 100;
