@@ -120,7 +120,7 @@ public class Vector2D implements ICloneable
 	 *  获取当前向量与另一个向量之间的夹角
 	 * @param	v 另一个向量对象
 	 * @param	degrees 指定是否返回角度值，默认为true
-	 * @reutrn  如果degrees为true，则返回向量夹角的角度值，否则返回向量夹角的弧度值
+	 * @reutrn  如果degrees为true，则返回向量夹角的角度值，否则返回向量夹角的弧度值。
 	 */
     public function angleBetween(v:Vector2D,degrees:Boolean=true):Number
     {
