@@ -124,15 +124,15 @@ public class Vector2D implements ICloneable
 	 */
     public function angleBetween(v:Vector2D,degrees:Boolean=true):Number
     {
-        var dx:Number = v.x - x;
-        var dy:Number = v.y - y;
-		var radians:Number =  Math.atan2(dy, dx) 
+        var dx:Number = x - v.x; 
+        var dy:Number = y - v.y;
+		var radians:Number =  Math.atan2(dy, dx);
 		if (degrees)
 		{
 			return MathUtil.rds2dgs(radians);
 		}
 		
-        return radians
+        return radians;
     }
     
     /**
