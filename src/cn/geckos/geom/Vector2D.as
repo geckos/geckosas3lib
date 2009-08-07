@@ -1,4 +1,4 @@
-package cn.geckos.geom
+﻿package cn.geckos.geom
 {
 import cn.geckos.api.ICloneable;
 import cn.geckos.utils.MathUtil;
@@ -114,6 +114,26 @@ public class Vector2D implements ICloneable
         var dy:Number = v.y - y;
         
         return Math.sqrt(dx*dx + dy*dy);
+    }
+	
+	/**
+	 *  获取当前向量与另一个向量之间的夹角
+	 * @param	v 另一个向量对象
+	 * @param	degrees 指定是否返回角度值，默认为true
+	 * @reutrn  如果degrees为true，则返回向量夹角的角度值，否则返回向量夹角的弧度值
+	 */
+    public function angleBetween(v:Vector2D,degrees:Boolean=true):Number
+    {
+        var dx:Number = v.x - x;
+        var dy:Number = v.y - y;
+        
+		var radians:Number =  Math.atan2(dy, dx) 
+		
+		if (degrees)
+		{
+			return MathUtil.rds2dgs(radians);
+		}
+        return radians
     }
     
     /**
