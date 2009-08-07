@@ -126,13 +126,12 @@ public class Vector2D implements ICloneable
     {
         var dx:Number = v.x - x;
         var dy:Number = v.y - y;
-        
 		var radians:Number =  Math.atan2(dy, dx) 
-		
 		if (degrees)
 		{
 			return MathUtil.rds2dgs(radians);
 		}
+		
         return radians
     }
     
