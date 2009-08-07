@@ -1,4 +1,4 @@
-package cn.geckos.utils
+﻿package cn.geckos.utils
 {
     import flash.display.FrameLabel;
     import flash.display.MovieClip;
