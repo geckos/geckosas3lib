@@ -12,9 +12,12 @@
     <classEntry path="cn.geckos.utils.ArrayUtil"/>
     <classEntry path="cn.geckos.utils.ColorUtil"/>
     <classEntry path="cn.geckos.utils.MathUtil"/>
+    <classEntry path="cn.geckos.utils.McUitl"/>
+    <classEntry path="cn.geckos.utils.MillisecondTransform"/>
     <classEntry path="cn.geckos.utils.NumberUtil"/>
     <classEntry path="cn.geckos.utils.Random"/>
     <classEntry path="cn.geckos.utils.StringUtil"/>
+    <classEntry path="cn.geckos.utils.TimeFormat"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
