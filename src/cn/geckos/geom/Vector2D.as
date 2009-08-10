@@ -115,23 +115,23 @@ public class Vector2D implements ICloneable
         
         return Math.sqrt(dx*dx + dy*dy);
     }
-	
-	/**
-	 *  获取当前向量与另一个向量之间的夹角
-	 * @param	v 另一个向量对象
-	 * @param	degrees 指定是否返回角度值，默认为true
-	 * @reutrn  如果degrees为true，则返回向量夹角的角度值，否则返回向量夹角的弧度值。
-	 */
+    
+    /**
+     *  获取当前向量与另一个向量之间的夹角
+     * @param    v 另一个向量对象
+     * @param    degrees 指定是否返回角度值，默认为true
+     * @reutrn  如果degrees为true，则返回向量夹角的角度值，否则返回向量夹角的弧度值。
+     */
     public function angleBetween(v:Vector2D,degrees:Boolean=true):Number
     {
         var dx:Number = x - v.x; 
         var dy:Number = y - v.y;
-		var radians:Number =  Math.atan2(dy, dx);
-		if (degrees)
-		{
-			return MathUtil.rds2dgs(radians);
-		}
-		
+        var radians:Number =  Math.atan2(dy, dx);
+        if (degrees)
+        {
+            return MathUtil.rds2dgs(radians);
+        }
+        
         return radians;
     }
     
