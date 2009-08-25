@@ -4,7 +4,7 @@
   <output>
     <movie disabled="True" />
     <movie input="" />
-    <movie path="bin/GeckosAS3Lib.swf" />
+    <movie path="bin\GeckosAS3Lib.swf" />
     <movie fps="30" />
     <movie width="800" />
     <movie height="600" />
@@ -76,6 +76,6 @@
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />
-    <option testMovie="ExternalPlayer" />
+    <option testMovie="Default" />
   </options>
 </project>
