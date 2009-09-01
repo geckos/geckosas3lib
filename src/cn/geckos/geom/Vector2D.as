@@ -211,6 +211,31 @@ public class Vector2D implements ICloneable
     }
     
     /**
+      * 向量旋转
+     * @param	angle 角度
+     */
+    public function rotate(angle):void
+    {
+        var cos:Number = Math.cos(MathUtil.dgs2rds(angle));
+        var sin:Number = Math.sin(MathUtil.dgs2rds(angle));
+        
+        var rx:Number = this.x * cos - this.y * sin;
+        var ry:Number = this.x * sin + this.y * cos;
+        this.x = rx;
+        this.y = ry:
+    }
+    
+    /**
+     * 根据公式 两向量的点积为0则两个向量垂直
+     * @param	v 向量
+     * @return  是否垂直
+     */
+    public function isPerpTo(v:Vector2D):Boolean
+    {
+        return (this.dot(v) == 0);
+    }
+    
+    /**
      * 描述向量实例的字符窜
      */
     public function toString():String
