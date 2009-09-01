@@ -1,11 +1,4 @@
-﻿/////////////////////////////////////////////////////////
-//  
-//  用于处理常用的字符串操作(去除空白字符等)
-//  http://gskinner.com/RegExr/ 在线测试正则表达式
-//  
-////////////////////////////////////////////////////////
-
-package cn.geckos.utils
+﻿package cn.geckos.utils
 {
 public final class StringUtil
 {
@@ -78,7 +71,6 @@ public final class StringUtil
 		}  
 		return rTrim(lTrim(target));
 	}
-	
 	
 	/**
 	 * 
@@ -312,8 +304,7 @@ public final class StringUtil
         return str;
     }
 	
-	//是否是数值字符串;  
-	/**
+	/** 
 	 * 是否是数值字符串;  
 	 * @param	char 字符串
 	 * @return  是否是数值字符串
@@ -327,9 +318,8 @@ public final class StringUtil
 		return isDouble(char) || isInteger(char) || isHex(char); 
 	} 
 	
-	//是否为Double型数据;
 	/**
-	 * 
+	 * 是否为Double型数据
 	 * @param	char 字符串
 	 * @return	是否为Double型数据;
 	 */
@@ -341,9 +331,9 @@ public final class StringUtil
 		return !(result == null);
 	}
 	
-	//Integer;
+	
 	/**
-	 * 
+	 * Integer 是否为整型
 	 * @param	char 字符串
 	 * @return
 	 */
@@ -355,9 +345,8 @@ public final class StringUtil
 		return !(result == null);
 	}
 	
-	//Hex; 是否为16进制
 	/**
-	 * 
+	 * 是否为16进制
 	 * @param	char 字符串
 	 * @return	是否为16进制
 	 */
@@ -369,11 +358,11 @@ public final class StringUtil
 		return !(result == null);
 	}
 	
-	//是否为Email地址;
+	
 	/**
-	 *  
+	 * 是否为Email地址
 	 * @param	char 字符串
-	 * @return  是否为Email地址;
+	 * @return  是否为Email地址
 	 */
 	public static function isEmail(char:String):Boolean
 	{  

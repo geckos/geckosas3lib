@@ -6,6 +6,7 @@
 
 package cn.geckos.utils
 {
+
 import flash.geom.ColorTransform;
 import flash.filters.ColorMatrixFilter;
 import cn.geckos.utils.NumberUtil;
@@ -50,11 +51,11 @@ public final class AdvanceColorUtil
 	 * @param	num   范围 0 - 100
 	 * @return  
 	 * 此方法采用了flash设计面板中的高级色彩应用
+     * 取值范围 0 - 100
 	 */
 	public static function setNegativeTransform(num:int):ColorTransform
 	{
-		if (num < 0) num = 0;
-		else if (num > 100) num = 100;
+		num = getGoodValue(0, 100, num);
 		var offset:Number = Math.round(num * (0xFF / 100));
 		return new ColorTransform( -1, -1, -1, 1, offset, offset, offset, 0);
 	}
@@ -76,12 +77,11 @@ public final class AdvanceColorUtil
 	 * @param	alpha   范围 0 - 100
 	 * @return  设置透明度的ColorTransform对象
 	 * 此方法实现了flash设计面板中的Alpha功能
+     * 取值范围 0 - 100
 	 */
 	public static function setAlphaTransform(alpha:int):ColorTransform
 	{
-		if (alpha < 0) alpha = 0;
-		else if (alpha > 100) alpha = 100;
-		
+		alpha = getGoodValue(0, 100, alpha);
 		var alphaOffset:Number = NumberUtil.round(255 / 100 * alpha);
 		return new ColorTransform(1, 1, 1, 0, 0, 0, 0, alphaOffset);
 	}
@@ -93,6 +93,7 @@ public final class AdvanceColorUtil
 	 * @param	count  范围 0 - 100
 	 * @return  设置给定色彩值容量的ColorTransform对象
 	 * 此方法实现了flash设计面板中的设置色彩(tint)的功能
+     * 取值范围 0 - 100
 	 */
 	public static function setTintTransform(hex:uint, count:int):ColorTransform
 	{
@@ -102,8 +103,7 @@ public final class AdvanceColorUtil
 		var g:uint = ColorUtil.getGreen(hex);
 		var b:uint = ColorUtil.getBlue(hex);
 		
-		if (count < 0) count = 0;
-		else if (count > 100) count = 100;
+		count = getGoodValue(0, 100, count);
 		
 		var multiPlier:Number = 1 - (count / 100);
 		
@@ -121,11 +121,11 @@ public final class AdvanceColorUtil
 	 * @param	hex
 	 * @param	count  范围 0 - 100
 	 * @return  获得指定色彩的色彩量的色彩值
+     * 取值范围 0 - 100
 	 */
 	public static function getTint(hex:uint, count:int):uint
 	{
-		if (count < 0) count = 0;
-		else if (count > 100) count = 100;
+		count = getGoodValue(0, 100, count);
 		
 		var r:uint = Math.round(ColorUtil.getRed(hex) * (count / 100));
 		var g:uint = Math.round(ColorUtil.getGreen(hex) * (count / 100));
@@ -139,14 +139,14 @@ public final class AdvanceColorUtil
 	 * @param	bright   范围 -100 - 100
 	 * @return  返回一个ColorTransform对象
 	 * 此方法实现了flash设计面板中的设置亮度(lightness)的功能
+     * 取值范围-100 - 100
  	 */
 	public static function setLightnessTransform(bright:int = 100):ColorTransform
 	{
 		var cTransForm:ColorTransform;
 		var multiPlier:Number = bright / 100;
 		
-		if (multiPlier > 1) multiPlier = 1;
-		else if (multiPlier < -1) multiPlier = -1;
+        multiPlier = getGoodValue(-1, 1, multiPlier);
 		
 		var multiPlierPercent:Number = 1 - NumberUtil.getAbsolute(multiPlier);
 	
@@ -190,8 +190,7 @@ public final class AdvanceColorUtil
 	 */
 	public static function setRGBMixTransform(r:int, g:int, b:int, count:uint):ColorTransform
 	{
-		if (count < 0) count = 0;
-		else if (count > 100) count = 100;
+		count = getGoodValue(0, 100, count);
 
 		var offsetMultiphy:Number = count / 100;
 		var multiplier:Number = 1 - offsetMultiphy;
@@ -216,7 +215,14 @@ public final class AdvanceColorUtil
 		return new ColorTransform(1, 1, 1, 1, 0, 0, 0, 0);
 	}
 	
-	
+    /**
+    * 提供取值范围
+    *
+    */
+	private static function getGoodValue(min:int, max:int,value:int):int
+	{
+		return Math.min(max, Math.max(value, min));
+	}
 	
 	////////////////////////////////////////////////////////////////////////
 	//
@@ -248,10 +254,11 @@ public final class AdvanceColorUtil
 	 * @return  返回设置亮度后的ColorMatrixFilter对象
 	 * 
 	 * 设置亮度 (模拟flash设计面板中的滤镜中的调整颜色中的亮度)
+     * 取值范围-100 - 100
 	 */
 	public static function setBrightnessFilter(value:int = 100):ColorMatrixFilter
 	{
-		var value:int = Math.max(Math.min(100, value), -100);
+		value = getGoodValue(-100, 100, value);
 		var matrix:Array = [1, 0, 0, 0, value,
 		                    0, 1, 0, 0, value,
 							0, 0, 1, 0, value,
@@ -264,11 +271,11 @@ public final class AdvanceColorUtil
 	 * @param	value 范围 0 - 100
 	 * @return  
 	 * 通过ColorMatrixFilter来设置透明度
+     * 取值范围0 - 100
 	 */
 	public static function setAlphaFilter(value:int):ColorMatrixFilter
 	{
-		if (value < 0) value = 0;
-		else if (value > 100) value = 100;
+		value = getGoodValue(0, 100, value);
 		var alpha:Number = value / 100;
 		var matrix:Array = [1, 0, 0, 0, 0,
 							0, 1, 0, 0, 0,

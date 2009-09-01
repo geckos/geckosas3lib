@@ -159,6 +159,8 @@ public final class ArrayUtil
 	*/
 	public static function getDifferAry (aryA:Array, aryB:Array):Array
 	{
+		aryA = getUniqueAry(aryA);
+		aryB = getUniqueAry(aryB);
 		var ary:Array = aryA.concat(aryB);
 		var uObj:Object = new Object ();
 		var newAry:Array = new Array ();
