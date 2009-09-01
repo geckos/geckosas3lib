@@ -22,6 +22,11 @@ public final class TimeFormat
 		var minutes:int = time % 3600 / 60;
 		var seconds:int = time % 3600 % 60;
 		
+<<<<<<< .mine
+		//trace(hours, minutes, seconds);
+		
+=======
+>>>>>>> .r135
 		var h:String = String(hours);
 		var m:String = String(minutes);
 		var s:String = String(seconds);
