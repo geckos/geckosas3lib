@@ -214,7 +214,7 @@ public class Vector2D implements ICloneable
       * 向量旋转
      * @param	angle 角度
      */
-    public function rotate(angle):void
+    public function rotate(angle:Number):void
     {
         var cos:Number = Math.cos(MathUtil.dgs2rds(angle));
         var sin:Number = Math.sin(MathUtil.dgs2rds(angle));
@@ -222,7 +222,7 @@ public class Vector2D implements ICloneable
         var rx:Number = this.x * cos - this.y * sin;
         var ry:Number = this.x * sin + this.y * cos;
         this.x = rx;
-        this.y = ry:
+        this.y = ry;
     }
     
     /**
