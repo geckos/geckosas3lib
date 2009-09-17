@@ -240,7 +240,7 @@ public class Vector2D implements ICloneable
      */
     public function toString():String
     {
-        return "[Vector2D (x:" + _x + ", " + _y + ":_y)]";
+        return "[Vector2D (x:" + _x + ", " + "y:" + _y + ")]";
     }
 
 }
