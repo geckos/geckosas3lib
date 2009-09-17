@@ -81,8 +81,15 @@ public final class AdvanceColorUtil
 	 */
 	public static function setAlphaTransform(alpha:int):ColorTransform
 	{
+<<<<<<< .mine
+		if (alpha < 0) alpha = 0;
+		else if (alpha > 100) alpha = 100;
+		
+		var alphaOffset:Number = MathUtil.round(255 / 100 * alpha);
+=======
 		alpha = getGoodValue(0, 100, alpha);
 		var alphaOffset:Number = MathUtil.round(255 / 100 * alpha);
+>>>>>>> .r148
 		return new ColorTransform(1, 1, 1, 0, 0, 0, 0, alphaOffset);
 	}
 	
