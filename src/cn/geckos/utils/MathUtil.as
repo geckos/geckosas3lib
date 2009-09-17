@@ -47,6 +47,103 @@ public class MathUtil
         return angle;
     }
 	
+	
+	/**
+    * 求取阶乘
+    */
+    public static function getFactorial(num:uint):uint
+    {
+        if(num == 0) return 1;
+        return num * getFactorial(num - 1);
+    }
+	
+	/**
+	 * 求乘方
+	 * @param	num  
+	 * @param	pow  乘方的次数
+	 * @return  
+	 */
+    public static function power(num:Number, pow:Number):Number
+    {
+        if(pow == 0)  return 1;
+        return num * power(num, pow - 1);
+    }
+	
+	/**
+     * 对一个数保留指定的小数位数, 然后四舍五入
+     * @param	num
+     * @param	interval 保留小数点后几位
+     * @return  返回一个指定保留小数位的数(四舍五入)
+     */
+    public static function round(num:Number, interval:Number = .1):Number
+    {
+        return Math.round(num / interval) * interval;
+    }
+	
+	/**
+     * 对一个数保留指定的小数位数, 然后向下取整
+     * @param	num
+     * @param	interval 保留小数点后几位
+     * @return  返回一个指定保留小数位的数(向下取整)
+     */
+    public static function floor(num:Number, interval:Number = .1):Number
+    {
+        return Math.floor(num / interval) * interval;
+    }
+	
+	/**
+     * 对一个数保留指定的小数位数, 然后向上取整
+     * @param	num
+     * @param	interval 保留小数点后几位
+     * @return  返回一个指定保留小数位的数(向上取整)
+     */
+    public static function ceil(num:Number, interval:Number = .1):Number
+    {
+        return Math.ceil(num / interval) * interval;
+    }
+	
+	/**
+    * 返回num的绝对值
+    * @param	num
+    * @return  返回参数num的绝对值
+    */
+    public static function getAbsolute(num:Number):Number
+    {
+        return num < 0 ? -num : num;
+    }
+	
+	 /**
+     * 返回参数mainNum除以divided的余数
+     * @param	mainNum
+     * @param	divided
+     * @return  返回参数mainNum除以divided的余数
+     */
+    public static function getRemainedNum(mainNum:Number, divided:Number):Number
+    {
+        return mainNum - ((mainNum / divided) >> 0) * divided;
+    }
+	
+	/**
+	 * 判断参数num是否是偶数
+	 * @param	num
+	 * @return  判断参数num是否是偶数
+	 */
+	public static function isEven(num:Number):Boolean
+	{
+		return Boolean(isEvenByDivided(num, 2));
+	}
+	
+	/**
+	 * 
+	 * @param	num
+	 * @param	divided
+	 * @return  得到num除以divided后得到的余数
+	 */
+	public static function isEvenByDivided(num:Number, divided:Number):Number
+	{
+		return num & (divided - 1);
+	}
+	
 	/**
 	 * 斜率公式
 	 * @param	x1 坐标点
@@ -58,7 +155,7 @@ public class MathUtil
 	public static function getSlope(x1:Number, y1:Number, x2:Number, y2:Number):Number
 	{
 		var slope:Number = (y1 - y2) / (x1 - x2);
-		return slope
+		return slope;
 	}
 	
 	/**
