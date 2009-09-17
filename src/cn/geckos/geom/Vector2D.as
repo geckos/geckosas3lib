@@ -1,4 +1,4 @@
-﻿package cn.geckos.geom
+﻿﻿package cn.geckos.geom
 {
 import cn.geckos.api.ICloneable;
 import cn.geckos.utils.MathUtil;
@@ -117,25 +117,6 @@ public class Vector2D implements ICloneable
     }
     
     /**
-     *  获取当前向量与另一个向量之间的夹角
-     * @param    v 另一个向量对象
-     * @param    degrees 指定是否返回角度值，默认为true
-     * @reutrn  如果degrees为true，则返回向量夹角的角度值，否则返回向量夹角的弧度值。
-     */
-    public function angleBetween(v:Vector2D,degrees:Boolean=true):Number
-    {
-        var dx:Number = x - v.x; 
-        var dy:Number = y - v.y;
-        var radians:Number =  Math.atan2(dy, dx);
-        if (degrees)
-        {
-            return MathUtil.rds2dgs(radians);
-        }
-        
-        return radians;
-    }
-    
-    /**
      * 检测当前向量与另一个向量的值是否相等。
      * 
      * @param v 另一个向量对象
@@ -208,31 +189,6 @@ public class Vector2D implements ICloneable
     public function dot(v:Vector2D):Number
     {
         return x*v.x + y*v.y;
-    }
-    
-    /**
-      * 向量旋转
-     * @param	angle 角度
-     */
-    public function rotate(angle:Number):void
-    {
-        var cos:Number = Math.cos(MathUtil.dgs2rds(angle));
-        var sin:Number = Math.sin(MathUtil.dgs2rds(angle));
-        
-        var rx:Number = this.x * cos - this.y * sin;
-        var ry:Number = this.x * sin + this.y * cos;
-        this.x = rx;
-        this.y = ry;
-    }
-    
-    /**
-     * 根据公式 两向量的点积为0则两个向量垂直
-     * @param	v 向量
-     * @return  是否垂直
-     */
-    public function isPerpTo(v:Vector2D):Boolean
-    {
-        return (this.dot(v) == 0);
     }
     
     /**
