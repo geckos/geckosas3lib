@@ -9,7 +9,7 @@ package cn.geckos.utils
 
 import flash.geom.ColorTransform;
 import flash.filters.ColorMatrixFilter;
-import cn.geckos.utils.NumberUtil;
+import cn.geckos.utils.MathUtil;
 
 
 public final class AdvanceColorUtil
@@ -82,7 +82,7 @@ public final class AdvanceColorUtil
 	public static function setAlphaTransform(alpha:int):ColorTransform
 	{
 		alpha = getGoodValue(0, 100, alpha);
-		var alphaOffset:Number = NumberUtil.round(255 / 100 * alpha);
+		var alphaOffset:Number = MathUtil.round(255 / 100 * alpha);
 		return new ColorTransform(1, 1, 1, 0, 0, 0, 0, alphaOffset);
 	}
 	
@@ -148,7 +148,7 @@ public final class AdvanceColorUtil
 		
         multiPlier = getGoodValue(-1, 1, multiPlier);
 		
-		var multiPlierPercent:Number = 1 - NumberUtil.getAbsolute(multiPlier);
+		var multiPlierPercent:Number = 1 - MathUtil.getAbsolute(multiPlier);
 	
 		var offset:Number = 0;
 		
