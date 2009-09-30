@@ -38,6 +38,13 @@ public class GMatrix implements ICloneable
 		return this._matrix;
 	}
 	
+	//setter
+	/*
+	public function set matrix(gx:Array):void
+	{
+		this._matrix = gx;
+	}
+	*/
 	//构造函数
 	//[1, 2, 3], 1, 3 代表着1行3列
 	//格式化输出为
@@ -60,12 +67,12 @@ public class GMatrix implements ICloneable
 	{
 		var str:String = "";
 		var tempAry:Array = this.format();
-		str += "----------" + "\n";
+		str += "----------------\n";
 		for(var k:Number = 0; k<tempAry.length; k++)
 		{
-			str += String(tempAry[k]) + "\n";
+			str += "\t" + String(tempAry[k]) + "\n";
 		}
-		str += "----------";
+		str += "----------------";
 		return str;
 	}
 	
@@ -192,17 +199,6 @@ public class GMatrix implements ICloneable
 		return  true;
 	}
 	
-	/**
-	*
-	*/
-	public function identify():void
-	{
-		//this.matrix = [1, 0, 0, 0, 0, 
-					 	//  0, 1, 0, 0, 0, 
-				  		// 0, 0, 1, 0, 0, 
-				   		//0, 0, 0, 1, 0];
-	}
-	
 	public function reset():void
 	{
 		this._matrix = this._cloneAry;
@@ -234,14 +230,6 @@ public class GMatrix implements ICloneable
 		gx._matrix = gx.oneDim(tempAry);
 		return gx as GMatrix;
 	}
-	
-	//返回数组
-	/*
-	public function getMatrix():Array
-	{
-		return this._matrix;
-	}
-	*/
 	
 	/*
 	* 返回正规的矩阵的数组形式
@@ -279,12 +267,45 @@ public class GMatrix implements ICloneable
 		return [this._row, gx._column];
 	}
 	
-	
-	
-	public function multiphy():void
+	/*
+	*  2矩阵相乘
+	*  
+	*/
+	public function multiply(gx:GMatrix):void
 	{
-		//............
+		if(!this.isCouldMultiply(gx)) throw new IllegalOperationError("不符合矩阵相乘的规则");
+		var cm:Array = this._matrix;
+		var om:Array = gx._matrix;
+		var currentAry:Array = [];
+		var tempAry:Array = [];
+		
+		//先计算m矩阵的右边的列数
+		for(var i:uint = 0; i < gx._column; i++)
+		{
+			for(var j:uint = 0; j < this._column; j++)
+			{
+				currentAry[j] = om[i + gx._column * j];
+			}	
+			// 整行的计算
+			for(var h:uint = 0; h < this._row; h++)
+			{
+				var value:Number = 0;
+				//从数组中提取, 生成单个数值(整列中的一个)
+				for(var z:uint = 0; z < currentAry.length; z++)
+				{
+					value += currentAry[z] * cm[z + (h * this._column)];
+				}
+				tempAry[i + (h * gx._column)] = value;
+			}
+		}
+		
+		//setter
+		var overShow:Array = this.count(gx);
+		this._row = overShow[0];
+		this._column = overShow[1];
+		this._matrix = tempAry;
 	}
+	
 	
 }
 
