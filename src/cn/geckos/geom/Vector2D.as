@@ -243,3 +243,4 @@ public class Vector2D implements ICloneable
        return "[Vector2D (x:" + _x + ", " + "y:" + _y + ")]";
     }
 }
+}
