@@ -1,17 +1,15 @@
 ﻿package cn.geckos.net 
 {
-	import flash.display.DisplayObject;
-	import flash.display.Loader;
-	import flash.errors.IOError;
-	import flash.net.URLRequest;
-	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.EventDispatcher;
-	import flash.events.ProgressEvent;
-	import flash.system.ApplicationDomain;
-	import flash.system.LoaderContext;
-	
-	/**
+    import flash.display.Loader;
+    import flash.events.Event;
+    import flash.events.EventDispatcher;
+    import flash.events.IOErrorEvent;
+    import flash.events.ProgressEvent;
+    import flash.net.URLRequest;
+    import flash.system.ApplicationDomain;
+    import flash.system.LoaderContext;
+
+    /**
 	* ...
 	* @author Jeff.xu (http://blog.jeffxu.cn)
 	*/

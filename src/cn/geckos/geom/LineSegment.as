@@ -46,7 +46,8 @@ public class LineSegment implements ICloneable
     public function getIntercept():Number
 	{
 		var slope:Number = this.getLineSlope();
-		var ep:Vector2D = this.endPoint;
+		//var ep:Vector2D = this.endPoint; 这个变量没用到么？
+		
 		return this.endPoint.y - slope * this.endPoint.x; 
 	}
 	

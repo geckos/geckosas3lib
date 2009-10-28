@@ -40,9 +40,9 @@ public class Random
     public static function randint(a:int, b:int):int
     {
         if (a > b)
-            a++
+            a++;
         else
-            b++
+            b++;
         return randrange(a, b);
     }
     
@@ -85,11 +85,11 @@ public class Random
     public static function choice(sequence:Object):*
     {
         if (!sequence.hasOwnProperty('length'))
-            throw new Error('无法对此对象执行此操作')
+            throw new Error('无法对此对象执行此操作');
             
-        var index:int = int(random() * sequence.length)
+        var index:int = int(random() * sequence.length);
         if (sequence is String)
-            return sequence.charAt(index);
+            return String(sequence).charAt(index);
         else
             return sequence[index];
     }

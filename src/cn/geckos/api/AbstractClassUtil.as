@@ -59,7 +59,6 @@ public class AbstractClassUtil
 	{
 		var reflectionXML:XML = describeType(obj);
 		var list:XMLList = reflectionXML.method;
-		var len:int = list.length();
 		
 		for (var item:String in abstractFunctionNameAry)
 		{

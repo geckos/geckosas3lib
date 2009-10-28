@@ -276,7 +276,7 @@ public final class AdvanceColorUtil
 	public static function setAlphaFilter(value:int):ColorMatrixFilter
 	{
 		value = getGoodValue(0, 100, value);
-		var alpha:Number = value / 100;
+		//var alpha:Number = value / 100; 这个变量没用到么
 		var matrix:Array = [1, 0, 0, 0, 0,
 							0, 1, 0, 0, 0,
 							0, 0, 1, 0, 0,

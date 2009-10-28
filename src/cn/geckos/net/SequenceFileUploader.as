@@ -78,7 +78,7 @@ public class SequenceFileUploader extends EventDispatcher
             return;
         }
         else {
-            _uploadingFile = _files[0]
+            _uploadingFile = _files[0];
             addFileListeners(_uploadingFile);
             
             _uploadingFile.upload(URLRequest(_requests[0]), _fields[0]);
@@ -130,15 +130,15 @@ public class SequenceFileUploader extends EventDispatcher
                 continue;
             }
             
-            var file:FileReference = FileReference( _files[index] );
-            removeFileListeners(file);
+            var theFile:FileReference = FileReference( _files[index] );
+            removeFileListeners(theFile);
             
             _files.splice(index, 1);
             _requests.splice(index, 1);
             _fields.splice(index, 1);
             
-            if( file == _uploadingFile ) {
-                file.cancel();
+            if( theFile == _uploadingFile ) {
+                theFile.cancel();
                 run();
             }
         }
