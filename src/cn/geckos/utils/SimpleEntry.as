@@ -11,7 +11,7 @@ public class SimpleEntry implements IEntry
     
     public function set key(v:*):void
     {
-        _key = *;
+        _key = v;
     }
     
     private var _value:*;
