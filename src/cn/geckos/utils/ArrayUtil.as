@@ -208,6 +208,12 @@ public final class ArrayUtil
 		return newArr;
 	}
 	
+    public static function swap(array:Array, index1:uint, index2:uint):void
+    {
+        var temp:* = array[index1];
+        array[index1] = array[index2];
+        array[index2] = temp;
+    }
 	
 	
 	
