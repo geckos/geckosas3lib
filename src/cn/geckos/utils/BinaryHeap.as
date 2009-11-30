@@ -7,6 +7,7 @@ package cn.geckos.utils
  * 参考： http://www.policyalmanac.org/games/binaryHeaps.htm
  * 
  * TODO 提取接口
+ * TODO 性能测试
  */
 public class BinaryHeap
 {
@@ -38,6 +39,21 @@ public class BinaryHeap
     public function get length():uint
     {
         return _source.length;
+    }
+    
+    /**
+     * 
+     */
+    public function get front():*
+    {
+        if (length > 0)
+        {
+            return _source[0];
+        }
+        else
+        {
+            return null;
+        }
     }
 
     
@@ -76,37 +92,55 @@ public class BinaryHeap
      */
     public function removeAt(index:uint):*
     {
-        var item:* = _source[index];
         var lastItem:* = _source.pop();
+        if (length == 0)
+        {
+            return lastItem;
+        }
+        
+        var item:* = _source[index];
         _source[index] = lastItem;
         
         var currentPosition:uint = index + 1;
         
         var childPosition:uint = currentPosition * 2;
         
-        var len:uint = length;
-        while (childPosition <= len)
+        while (childPosition <= length)
         {
-            if (compareFunction(lastItem, _source[childPosition-1]) == 1)
+            // 注意是数组的index，所以要减1
+            var left:* = _source[childPosition - 1];
+            // 注意是数组的index，所以不减1
+            var right:* = _source[childPosition];
+            
+            var child:*;
+            if (!right || compareFunction(left, right) == -1)
             {
-                // 注意后面两个参数 ，是数组的index，所以要减1
-                ArrayUtil.swap(_source, currentPosition-1, childPosition-1);
-                currentPosition = childPosition;
-                childPosition = currentPosition * 2;
-                continue;
+                child = left;
             }
-            else if((childPosition + 1) <= len 
-                    && compareFunction(lastItem, _source[childPosition]) == 1)
+            else
             {
-                // 注意后面两个参数 ，是数组的index，所以不减1
-                ArrayUtil.swap(_source, currentPosition, childPosition);
-                currentPosition = childPosition + 1;
-                childPosition = currentPosition * 2;
-                continue;
+                child = right;
             }
             
-            // 
-            break;
+            if (compareFunction(lastItem, child) == 1)
+            {
+                if (child == right)
+                {
+                    childPosition += 1;
+                }
+                
+                // 注意后面两个参数是数组的index，所以要减1
+                ArrayUtil.swap(_source, currentPosition-1, childPosition-1);
+                
+                // 新的位置，用于下一轮比较
+                currentPosition = childPosition;
+                childPosition = currentPosition * 2;
+            }
+            else
+            {
+                break;
+            }
+            
         }
         
         return item;
