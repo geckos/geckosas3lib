@@ -105,7 +105,8 @@ public class BinaryHeap
         
         var childPosition:uint = currentPosition * 2;
         
-        while (childPosition <= length)
+        var len:uint = length;
+        while (childPosition <= len)
         {
             // 注意是数组的index，所以要减1
             var left:* = _source[childPosition - 1];
@@ -140,7 +141,6 @@ public class BinaryHeap
             {
                 break;
             }
-            
         }
         
         return item;
