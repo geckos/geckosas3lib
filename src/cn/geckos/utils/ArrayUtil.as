@@ -209,49 +209,6 @@ public final class ArrayUtil
 	}
 	
 	
-	/**
-	 * 
-	 * @param	arr
-	 * @return
-	 * 随机一个数组
-	 */
-	public static function randomArrayB(arr:Array):Array
-	{
-		return arr.sort(getRandomId);
-	}
-	
-	/**
-	 * 
-	 * @param	objA
-	 * @param	objB
-	 * @return
-	 * 生成一个随即的1或-1, 为sort()方法排序提供参数
-	 */
-	private static function getRandomId(objA:Object, objB:Object):int
-	{
-		return Math.random() > .5 ? 1 : -1;
-	}
-	
-	
-	/**
-	 * 
-	 * @param	arr
-	 * @return
-	 * 根据指定数组返回一个生产该数组内随机项目的新数组
-	 */
-	public static function randomArrayA(arr:Array):Array
-	{
-		var copy:Array = arr.concat();
-		var ranArr:Array = new Array();
-		for(var i:int = 0; i<copy.length; i++)
-		{
-			var tempIndex:int = (Math.random() * copy.length) >> 0;
-			ranArr.push(copy[tempIndex]);
-			copy.splice(tempIndex, 1);
-			i--;
-		}
-		return ranArr;
-	}
 	
 	
 }
