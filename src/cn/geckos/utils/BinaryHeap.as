@@ -42,9 +42,9 @@ public class BinaryHeap
     }
     
     /**
-     * 
+     * 头元素
      */
-    public function get front():*
+    public function get head():*
     {
         if (length > 0)
         {
@@ -69,14 +69,14 @@ public class BinaryHeap
      * @param value
      * 
      */
-    public function insert(value:*):void
+    public function add(e:*):void
     {
-        _source.push(value);
+        _source.push(e);
         var currentPosition:uint = length;
         var parentPosition:uint = length / 2;
         
         while (parentPosition > 0 
-               && compareFunction(value, _source[parentPosition-1]) == -1)
+               && compareFunction(e, _source[parentPosition-1]) == -1)
         {
             ArrayUtil.swap(_source, currentPosition-1, parentPosition-1);
             currentPosition = parentPosition;
@@ -90,15 +90,15 @@ public class BinaryHeap
      * @return 
      * 
      */
-    public function removeAt(index:uint):*
+    private function removeAt(index:uint):*
     {
-        var lastItem:* = _source.pop();
-        if (length == 0)
+        if (index == length-1)
         {
-            return lastItem;
+            return _source.pop();
         }
         
         var item:* = _source[index];
+        var lastItem:* = _source.pop();
         _source[index] = lastItem;
         
         var currentPosition:uint = index + 1;
@@ -146,19 +146,52 @@ public class BinaryHeap
         return item;
     }
     
-    public function shift():*
+    /**
+     * 删除一个元素
+     * @param e
+     * @return 
+     * 
+     */
+    public function remove(e:*):Boolean
+    {
+        var index:int = _source.indexOf(e);
+        if (index == -1)
+        {
+            return false;
+        }
+        else
+        {
+            removeAt(index);
+            return true;
+        }
+    }
+    
+    /**
+     * 删除头元素并返回
+     * @return 
+     */    
+    public function poll():*
     {
         return removeAt(0);
     }
     
-    public function pop():*
-    {
-        return removeAt(length - 1);
-    }
-    
+    /**
+     * 清空集合
+     */
     public function clear():void
     {
         _source = [];
+    }
+    
+    /**
+     * 判断指定元素是否在集合中
+     * @param e
+     * @return
+     * 
+     */
+    public function contains(e:*):Boolean
+    {
+        return _source.indexOf(e) != -1;
     }
 }
 }
