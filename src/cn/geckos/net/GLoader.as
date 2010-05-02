@@ -5,7 +5,6 @@
     import flash.events.HTTPStatusEvent;
     import flash.events.IOErrorEvent;
     import flash.events.ProgressEvent;
-    import flash.net.URLLoader;
     import flash.net.URLRequest;
     import flash.net.URLRequestMethod;
     import flash.net.URLVariables;
@@ -116,7 +115,7 @@
             loader.bind = null;
             loader.isWorking = false;
             if (loader.floater) {
-                GLoader.destroyLoader(loader);
+                destroyLoader(loader);
             }
             
         }
@@ -223,13 +222,13 @@
          * @param	obj 
          */
         protected function wait(obj:Object):void {
-            waitingRoom.push(o);
+            waitingRoom.push(obj);
         }
         
         private static function request(loader:BindableLoader, url:String, param:Object, method:String):void {
             var r:URLRequest = new URLRequest(url);
             var p:URLVariables = new URLVariables();
-            for (var key in param) {
+            for (var key:String in param) {
                 p[key] = param[key];
             }
             r.method = method;
@@ -376,7 +375,7 @@
             return {url:url, param:param, callback:callbackFun, method:method, callbackId:callbackId}
         }
         
-        protected static function destroyLoader(loader:BindableLoader):void {
+        protected function destroyLoader(loader:BindableLoader):void {
             loader.removeEventListener(Event.COMPLETE, onPoolComplete);
             loader.removeEventListener(ProgressEvent.PROGRESS, onPoolProgress);
             loader.removeEventListener(IOErrorEvent.IO_ERROR, onPoolIOError);
@@ -396,50 +395,51 @@
             poolSize = value;
         }
     }
+}
+
+import flash.net.URLLoader;
+class BindableLoader extends URLLoader {
+    private var _id:String;
+    private var _isWorking:Boolean;
+    private var _bindParam:*;
+    private var _floater:Boolean;
     
-    class BindableLoader extends URLLoader {
-        private var _id:String;
-        private var _isWorking:Boolean;
-        private var _bindParam:*;
-        private var _floater:Boolean;
-
-        public function get id():String
-        {
-            return _id;
-        }
-
-        public function set id(value:String):void
-        {
-            _id = value;
-        }
-
-        public function get bind():* {
-            return _bindParam;
-        }
-
-        public function set bind(value:*):void {
-            _bindParam = value;
-        }
-
-        public function get isWorking():Boolean
-        {
-            return _isWorking;
-        }
-
-        public function set isWorking(value:Boolean):void
-        {
-            _isWorking = value;
-        }
-
-        public function get floater():Boolean
-        {
-            return _floater;
-        }
-
-        public function set floater(value:Boolean):void
-        {
-            _floater = value;
-        }
-
+    public function get id():String
+    {
+        return _id;
     }
+    
+    public function set id(value:String):void
+    {
+        _id = value;
+    }
+    
+    public function get bind():* {
+        return _bindParam;
+    }
+    
+    public function set bind(value:*):void {
+        _bindParam = value;
+    }
+    
+    public function get isWorking():Boolean
+    {
+        return _isWorking;
+    }
+    
+    public function set isWorking(value:Boolean):void
+    {
+        _isWorking = value;
+    }
+    
+    public function get floater():Boolean
+    {
+        return _floater;
+    }
+    
+    public function set floater(value:Boolean):void
+    {
+        _floater = value;
+    }
+    
 }
