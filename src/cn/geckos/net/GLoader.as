@@ -53,7 +53,7 @@
         
         private var order:String;
         
-        public function GLoader(poolSize:int=0, order:String="STACK") 
+        public function GLoader(order:String="STACK", poolSize:int=0) 
         {
             this.poolSize = poolSize;
             this.order = order;

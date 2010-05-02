@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<flexLibProperties version="1">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="false" version="1">
   <includeClasses>
     <classEntry path="cn.geckos.api.AbstractClassUtil"/>
     <classEntry path="cn.geckos.api.ICloneable"/>
     <classEntry path="cn.geckos.geom.Vector2D"/>
+    <classEntry path="cn.geckos.net.GLoader"/>
     <classEntry path="cn.geckos.net.SequenceFileUploader"/>
     <classEntry path="cn.geckos.net.SequenceLoader"/>
     <classEntry path="cn.geckos.net.SequenceLoaderEvent"/>
@@ -13,8 +14,6 @@
     <classEntry path="cn.geckos.utils.ColorUtil"/>
     <classEntry path="cn.geckos.utils.MathUtil"/>
     <classEntry path="cn.geckos.utils.McUitl"/>
-    <classEntry path="cn.geckos.utils.MillisecondTransform"/>
-    <classEntry path="cn.geckos.utils.NumberUtil"/>
     <classEntry path="cn.geckos.utils.Random"/>
     <classEntry path="cn.geckos.utils.StringUtil"/>
     <classEntry path="cn.geckos.utils.TimeFormat"/>
