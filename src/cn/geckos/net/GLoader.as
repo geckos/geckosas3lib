@@ -120,6 +120,37 @@
             
         }
         
+        //#####====---->____DEBUG MODE
+        
+        protected static function beginDebug(loader:BindableLoader):void {
+            var d:Date = new Date();
+            var report:Object = {startTime:d};
+            loader.bind.report = report;
+            trace("++++++++++++");
+            trace(loader.id, "is working for request[", 
+                  loader.bind.url, "] using", 
+                  loader.bind.method, "method");
+            var param:Object = loader.bind.param;
+            trace("----Parameter----");
+            for (var key:String in param) {
+                trace(key, param[key]);
+            }
+            trace("------------");
+            trace(loader.id, "starts at:", d);
+            trace("============");
+        }
+        
+        protected static function endDebug(loader:BindableLoader):void {
+            var report:Object = loader.bind.report;
+            var beginTime:Date = report.startTime;
+            var endTime:Date = new Date();
+            trace("============");
+            trace("url", loader.bind.url);
+            trace(loader.id, "stopped at:", endTime);
+            trace("This request last for:", (endTime.time - beginTime.time), "ms.");
+            trace("------------");
+        }
+        
         //######====---->____Pool Loader Event Handler
         
         protected function initPoolLoader():BindableLoader {
@@ -155,6 +186,10 @@
                 }
                 param.callback.ioError(o);
             }
+            
+            if (DEBUG) {
+                GLoader.endDebug(loader);
+            }
 
             doNext(loader);
         }
@@ -184,6 +219,10 @@
                 param.callback.complete(o);
             }
             
+            if (DEBUG) {
+                GLoader.endDebug(loader);
+            }
+            
             doNext(loader);
         }
         
@@ -193,6 +232,10 @@
             var loader:BindableLoader;
             if (poolSize == 0) {
                 loader = initPoolLoader();
+                if (DEBUG) {
+                    var d:Date = new Date();
+                    loader.id = "Floater Loader " + d.time;
+                }
                 loader.floater = true;
                 return loader;
             }
@@ -236,7 +279,7 @@
             loader.isWorking = true;
             loader.load(r);
             if (DEBUG) {
-                trace(loader.id, "is working for request[", url, "] using", method, "method with", p.toString());
+                beginDebug(loader);
             }
         }
         
