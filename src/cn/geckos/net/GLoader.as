@@ -53,7 +53,7 @@
         
         private var order:String;
         
-        public function GLoader(order:String="STACK", poolSize:int=0) 
+        public function GLoader(poolSize:int=0, order:String="STACK") 
         {
             this.poolSize = poolSize;
             this.order = order;
@@ -126,29 +126,35 @@
             var d:Date = new Date();
             var report:Object = {startTime:d};
             loader.bind.report = report;
-            trace("++++++++++++");
-            trace(loader.id, "is working for request[", 
-                  loader.bind.url, "] using", 
-                  loader.bind.method, "method");
-            var param:Object = loader.bind.param;
-            trace("----Parameter----");
-            for (var key:String in param) {
-                trace(key, param[key]);
+            trace(">>>>>>>> [START] at:", d);
+            if (loader.bind.callbackId != null) {
+            trace("[Id]......:", loader.bind.callbackId);
             }
-            trace("------------");
-            trace(loader.id, "starts at:", d);
-            trace("============");
+            trace("[Loader]..:", loader.id);
+            trace("[Url].....:", loader.bind.url);
+            trace("[Method]..:", loader.bind.method);
+            var param:Object = loader.bind.param;
+            trace("[===Parameter===]");
+            for (var key:String in param) {
+            trace("KEY:", "[" + key + "]", ", VAL:", "[" + param[key] + "]");
+            }
+            trace("==================");
         }
         
         protected static function endDebug(loader:BindableLoader):void {
             var report:Object = loader.bind.report;
             var beginTime:Date = report.startTime;
             var endTime:Date = new Date();
-            trace("============");
-            trace("url", loader.bind.url);
-            trace(loader.id, "stopped at:", endTime);
-            trace("This request last for:", (endTime.time - beginTime.time), "ms.");
-            trace("------------");
+            trace("<<<<<<<< [STOP] at:", endTime);
+            if (loader.bind.callbackId != null) {
+            trace("[Id]......:", loader.bind.callbackId);
+            }
+            trace("[Loader]..:", loader.id);
+            trace("[Pool]....:", !loader.floater);
+            trace("[Url].....:", loader.bind.url);
+            trace("[Last]....:", (endTime.time - beginTime.time), "ms.");
+            trace("[Status]..:", report.status);
+            trace("==================");
         }
         
         //######====---->____Pool Loader Event Handler
@@ -188,9 +194,10 @@
             }
             
             if (DEBUG) {
+                loader.bind.report.status = "ERROR" + e.toString();
                 GLoader.endDebug(loader);
             }
-
+            
             doNext(loader);
         }
         
@@ -220,6 +227,7 @@
             }
             
             if (DEBUG) {
+                loader.bind.report.status = "COMPLETE";
                 GLoader.endDebug(loader);
             }
             
@@ -234,7 +242,7 @@
                 loader = initPoolLoader();
                 if (DEBUG) {
                     var d:Date = new Date();
-                    loader.id = "Floater Loader " + d.time;
+                    loader.id = String(d.time);
                 }
                 loader.floater = true;
                 return loader;
@@ -252,8 +260,9 @@
             }else {
                 loader = initPoolLoader();
                 pool.push(loader);
+                
                 if (DEBUG) {
-                    loader.id = this.toString() + " NO." + (pool.length - 1) + " Loader";
+                    loader.id = String(pool.length - 1);
                 }
                 return loader;
             }
@@ -278,6 +287,7 @@
             r.data = p;
             loader.isWorking = true;
             loader.load(r);
+            
             if (DEBUG) {
                 beginDebug(loader);
             }
