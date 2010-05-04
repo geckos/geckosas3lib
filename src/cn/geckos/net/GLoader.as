@@ -18,6 +18,44 @@
      * On the other words, there at least one pool exists which is the global pool.
      * The machanism of managing pool is to lazy initial every single loader when needed.
      * 
+     * ==Example==
+     * Below are example code fragment of GLoader:
+     * 
+     * public function test():void
+     * var loader:GLoader = new GLoader();
+     * loader.rGet("http://127.0.0.1:8080/echo.php", {data:"hello"}, {complete:handler}, "1");
+     * loader.rPost("http://127.0.0.1:8080/echo.php", {data:"hello"}, {complete:handler, status:onStatus, ioError:onIOErrorHandler, progress:onProgress}, "1");
+     * loader.append("http://127.0.0.1:8080/echo.php", {data:"hello"}, {complete:handler}, "POST", "1");
+     * loader.preppend("http://127.0.0.1:8080/echo.php", {data:"hello"}, {complete:handler}, "POST", "1");
+     * }
+     * 
+     * public function handler(arg:Object):void {
+     *      trace("Callback ID", arg.id);
+     *      trace("Result", arg.data);
+     * }
+     * 
+     * public function onStatus(arg:Object):void {
+     *      trace("Callback ID", arg.id);
+     *      trace("Status", arg.status);
+     * }
+     * 
+     * public function onIOErrorHandler(arg:Object):void {
+     *      trace("Callback ID", arg.id);
+     *      trace("IOError", arg.ioerror)
+     * }
+     * 
+     * public function onProgress(arg:Object):void {
+     *      trace("Callback ID", arg.id);
+     *      trace("Bytes Loaded", arg.loaded, "Bytes Total", arg.total);
+     * }
+     * 
+     * Below are php code for echo.
+     * 
+     * <?php
+     * $data = $_REQUEST['data'];
+     * sleep(2);
+     * echo $data;
+     * 
      * @author jeff
      */
     public class GLoader extends EventDispatcher
@@ -30,7 +68,7 @@
         //______GLOBAL SCOPE_____
         
         // If GLOBAL_POOL_SIZE equals zero means don't reuse the loader from the pool, 
-        // creating loader every time when needed. Otherwize obtain loader from pool while there has idel loader avaiable.
+        // creating loader every time when needed. Otherwize obtain loader from pool while there has idle loader avaiable.
         private static var GLOBAL_POOL_SIZE:int = 0; 
         private static var gPool:Array = new Array();
         
@@ -42,7 +80,7 @@
         //______INSTANCE SCOPE_____
         
         // If poolSize equals zero means don't reuse the loader from the pool, 
-        // creating loader every time when needed. Otherwize obtain loader from pool while there has idel loader avaiable.
+        // creating loader every time when needed. Otherwize obtain loader from pool while there has idle loader avaiable.
         private var poolSize:int = 0;
         private var pool:Array = new Array();
         
@@ -53,6 +91,11 @@
         
         private var order:String;
         
+        /**
+         * Constructor of GLoader
+         * @param	poolSize default is 0(unlimit number of loader, no wait time).
+         * @param	order default is stack order.
+         */
         public function GLoader(poolSize:int=0, order:String="STACK") 
         {
             this.poolSize = poolSize;
@@ -253,9 +296,9 @@
                     return pool[i].loader;
                 }
             }
-            // The pool is full and no more free loader avaiable, waiting for idel loader.
+            // The pool is full and no more free loader avaiable, waiting for idle loader.
             if (pool.length == poolSize) {
-                //No idel loader avaiable
+                //No idle loader avaiable
                 return null;
             }else {
                 loader = initPoolLoader();
