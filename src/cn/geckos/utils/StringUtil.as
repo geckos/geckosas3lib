@@ -2,169 +2,169 @@
 {
 public final class StringUtil
 {
-	/**
-	 * 
-	 * @param	str
-	 * @return
-	 * 根据给定unicode字符返回对应的字符串
-	 */
-	public static function showUnicodeStr(str:String):String
-	{
-		return String.fromCharCode(parseInt(str, 16));
-	}
-	
-	/**
-	 * @param	str
-	 * @return
-	 * 匹配中文字符
-	 */
-	public static function matchChineseWord(str:String):Array
-	{
-		//中文字符的unicode值[\u4E00-\u9FA5]
-		var patternA:RegExp = /[\u4E00-\u9FA5]+/gim;
-		return str.match(patternA);
-	}
-	
-	/**
-	 * 
-	 * @param	target
-	 * @return
-	 * 去除字符串左端的空白字符
-	 */
-	public static function lTrim(target:String):String
-	{
-		var startIndex:int = 0;
-		while (isWhiteSpace(target.charAt(startIndex)))
-		{
-			startIndex++;
-		}
-		return target.slice(startIndex, target.length);
-	}
-	
-	/**
-	 * 
-	 * @param	target
-	 * @return
-	 * 去除字符串右端的空白字符
-	 */
-	public static function rTrim(target:String):String
-	{
-		var endIndex:int = target.length - 1;
-		while (isWhiteSpace(target.charAt(endIndex))) 
-		{
-			endIndex --;
-		}
-		return target.slice(0, endIndex + 1);
-	}
-	
-	
-	/**
-	 * 返回一个去除2段空白字符的字符串
-	 * @param	target
-	 * @return  返回一个去除2段空白字符的字符串
-	 */
-	public static function trim(target:String):String
-	{
-		if (target == null)
-		{  
-			return null;  
-		}  
-		return rTrim(lTrim(target));
-	}
-	
-	/**
-	 * 
-	 * @param	str
-	 * @return
-	 * 删除字符串2端空白字符串
-	 * 
-	 * 正则表达式中
-	 * \s代表空白字符
-	 * ^ 代表字符串开始位置
-	 * $ 代表字符串末尾
-	 * 
-	 */
-	 /*
-	public static function trimB(str:String):String
-	{
-		var newStr:String = str.replace(/(^\s*)|(\s*$)/g, "");
-		return newStr;
-	}
-	*/
-	//////////////////////////////////////////////////////////////
-	//
-	// $n好比在正则表达式中使用\n来反向引用前面匹配的内容(被括号括起来的部分)
-	//
-	//////////////////////////////////////////////////////////////
-	/*
-	public static function trimC(str:String):String
-	{
-		var reg:RegExp = /^\s*(\S+(\s+\S+)*)\s*$/g;
-		return str.replace(reg, "$1");
-	}
-	*/
-	
-	///////////////////////////////////////////////////////////
-	//
-	//  " " 一个空白字符
-	//  \t  制表符
-	//  \r  回车符
-	//  \n  换行符
-	//
-	//////////////////////////////////////////////////////////
-	/**
-	 * 返回该字符是否为空白字符
-	 * @param	str
-	 * @return  返回该字符是否为空白字符
-	 */
-	public static function isWhiteSpace(str:String):Boolean
-	{
-		if (str == " " || str == "\t" || str == "\r" || str == "\n")
-		{
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * 返回执行替换后的字符串
-	 * @param	mainStr   待查找字符串
-	 * @param	targetStr 目标字符串
-	 * @param	replaceStr 替换字符串 
-	 * @param	caseMark  是否忽略大小写
-	 * @return  返回执行替换后的字符串
-	 */
-	public static function replaceMatch(mainStr:String, targetStr:String, 
-										replaceStr:String, caseMark:Boolean = false):String
-	{
-		var len:int = mainStr.length;
-		var tempStr:String = "";
-		var isMatch:Boolean = false;
-		var tempTarget:String = caseMark == true ? targetStr.toLowerCase() : targetStr;
-		for (var i:int = 0; i < len; i++)
-		{
-			isMatch = false;
-			if (mainStr.charAt(i) == tempTarget.charAt(0))
-			{
-				if (mainStr.substr(i, tempTarget.length) == tempTarget)
-				{
-					isMatch = true;
-				}
-			}
-			if (isMatch)
-			{
-				tempStr += replaceStr;
-				i = i + tempTarget.length - 1;
-			}
-			else 
-			{
-				tempStr += mainStr.charAt(i);
-			}
-		}
-		return tempStr;
-	}
-	
-	private static var specialSigns:Array = [
+    /**
+     * 
+     * @param    str
+     * @return
+     * 根据给定unicode字符返回对应的字符串
+     */
+    public static function showUnicodeStr(str:String):String
+    {
+        return String.fromCharCode(parseInt(str, 16));
+    }
+    
+    /**
+     * @param    str
+     * @return
+     * 匹配中文字符
+     */
+    public static function matchChineseWord(str:String):Array
+    {
+        //中文字符的unicode值[\u4E00-\u9FA5]
+        var patternA:RegExp = /[\u4E00-\u9FA5]+/gim;
+        return str.match(patternA);
+    }
+    
+    /**
+     * 
+     * @param    target
+     * @return
+     * 去除字符串左端的空白字符
+     */
+    public static function lTrim(target:String):String
+    {
+        var startIndex:int = 0;
+        while (isWhiteSpace(target.charAt(startIndex)))
+        {
+            startIndex++;
+        }
+        return target.slice(startIndex, target.length);
+    }
+    
+    /**
+     * 
+     * @param    target
+     * @return
+     * 去除字符串右端的空白字符
+     */
+    public static function rTrim(target:String):String
+    {
+        var endIndex:int = target.length - 1;
+        while (isWhiteSpace(target.charAt(endIndex))) 
+        {
+            endIndex --;
+        }
+        return target.slice(0, endIndex + 1);
+    }
+    
+    
+    /**
+     * 返回一个去除2段空白字符的字符串
+     * @param    target
+     * @return  返回一个去除2段空白字符的字符串
+     */
+    public static function trim(target:String):String
+    {
+        if (target == null)
+        {  
+            return null;  
+        }  
+        return rTrim(lTrim(target));
+    }
+    
+    /**
+     * 
+     * @param    str
+     * @return
+     * 删除字符串2端空白字符串
+     * 
+     * 正则表达式中
+     * \s代表空白字符
+     * ^ 代表字符串开始位置
+     * $ 代表字符串末尾
+     * 
+     */
+     /*
+    public static function trimB(str:String):String
+    {
+        var newStr:String = str.replace(/(^\s*)|(\s*$)/g, "");
+        return newStr;
+    }
+    */
+    //////////////////////////////////////////////////////////////
+    //
+    // $n好比在正则表达式中使用\n来反向引用前面匹配的内容(被括号括起来的部分)
+    //
+    //////////////////////////////////////////////////////////////
+    /*
+    public static function trimC(str:String):String
+    {
+        var reg:RegExp = /^\s*(\S+(\s+\S+)*)\s*$/g;
+        return str.replace(reg, "$1");
+    }
+    */
+    
+    ///////////////////////////////////////////////////////////
+    //
+    //  " " 一个空白字符
+    //  \t  制表符
+    //  \r  回车符
+    //  \n  换行符
+    //
+    //////////////////////////////////////////////////////////
+    /**
+     * 返回该字符是否为空白字符
+     * @param    str
+     * @return  返回该字符是否为空白字符
+     */
+    public static function isWhiteSpace(str:String):Boolean
+    {
+        if (str == " " || str == "\t" || str == "\r" || str == "\n")
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * 返回执行替换后的字符串
+     * @param    mainStr   待查找字符串
+     * @param    targetStr 目标字符串
+     * @param    replaceStr 替换字符串 
+     * @param    caseMark  是否忽略大小写
+     * @return  返回执行替换后的字符串
+     */
+    public static function replaceMatch(mainStr:String, targetStr:String, 
+                                        replaceStr:String, caseMark:Boolean = false):String
+    {
+        var len:int = mainStr.length;
+        var tempStr:String = "";
+        var isMatch:Boolean = false;
+        var tempTarget:String = caseMark == true ? targetStr.toLowerCase() : targetStr;
+        for (var i:int = 0; i < len; i++)
+        {
+            isMatch = false;
+            if (mainStr.charAt(i) == tempTarget.charAt(0))
+            {
+                if (mainStr.substr(i, tempTarget.length) == tempTarget)
+                {
+                    isMatch = true;
+                }
+            }
+            if (isMatch)
+            {
+                tempStr += replaceStr;
+                i = i + tempTarget.length - 1;
+            }
+            else 
+            {
+                tempStr += mainStr.charAt(i);
+            }
+        }
+        return tempStr;
+    }
+    
+    private static var specialSigns:Array = [
         '&', '&amp;',
         '<', '&lt;',
         '>', '&gt;',
@@ -274,12 +274,15 @@ public final class StringUtil
      */
     public static function format(str:String, ...args):String
     {
-        if (!args || args.length==0) 
+        if( !args || args.length==0 ) 
+        {
             return str;
+        }
         
         var isDictArg:Boolean = false;
         var sArgs:Object = args;
-        if (!(args[0] is String)) 
+        
+        if(!(args[0] is String)) 
         {
             sArgs = args[0];
             isDictArg = true;
@@ -287,100 +290,122 @@ public final class StringUtil
         
         var pattern:RegExp = /(?<!\\)\{[^{}]*[^\\]\}/gim;
         
-        str = str.replace(pattern, 
-	        function(match:String, ...args):String 
-	        {
-	            var key:* = match.substring(1, match.length - 1);
-	            if (!isDictArg) 
-	                key = Number(key);
-	                
-	            return sArgs[key];
-	        }
-	    );
+        str = str.replace(pattern, function(match:String, ...args):String {
+            var key:* = match.substring(1, match.length - 1);
+            if(!isDictArg) 
+            {
+                key = Number(key);
+                return sArgs[key];
+            }
+            else
+            {
+                return getObjectAttr(key, sArgs);
+            }
+        });
         
         str = str.replace(/\\{/gm, '{');
         str = str.replace(/\\}/gm, '}');
         
         return str;
     }
-	
-	/** 
-	 * 是否是数值字符串;  
-	 * @param	char 字符串
-	 * @return  是否是数值字符串
-	 */
-	public static function isNumber(char:String):Boolean
-	{  
-		if (char == null)
-		{  
-			return false;  
-		}  
-		return isDouble(char) || isInteger(char) || isHex(char); 
-	} 
-	
-	/**
-	 * 是否为Double型数据
-	 * @param	char 字符串
-	 * @return	是否为Double型数据;
-	 */
-	public static function isDouble(char:String):Boolean 
-	{
-		var pattern:RegExp =/^[-\+]?\d+(\.\d+)?$/;
-		var result:Object = pattern.exec(char);
-		
-		return !(result == null);
-	}
-	
-	
-	/**
-	 * Integer 是否为整型
-	 * @param	char 字符串
-	 * @return
-	 */
-	public static function isInteger(char:String):Boolean 
-	{
-		var pattern:RegExp =/^[-\+]?\d+$/;
-		var result:Object = pattern.exec(char);
-		
-		return !(result == null);
-	}
-	
-	/**
-	 * 是否为16进制
-	 * @param	char 字符串
-	 * @return	是否为16进制
-	 */
-	public static function isHex(char:String):Boolean 
-	{
-		var pattern:RegExp =/^[0-9A-Fa-f]+$/;
-		var result:Object = pattern.exec(char);
-		
-		return !(result == null);
-	}
-	
-	
-	/**
-	 * 是否为Email地址
-	 * @param	char 字符串
-	 * @return  是否为Email地址
-	 */
-	public static function isEmail(char:String):Boolean
-	{  
-		if (char == null)
-		{  
-			return false;  
-		}  
-		char = trim(char);
-		var pattern:RegExp = /(\w|[_.\-])+@((\w|-)+\.)+\w{2,4}+/;   
-		var result:Object = pattern.exec(char);  
-		
-		if (result == null) 
-		{  
-			return false;  
-		}  
-		return true;  
-	}  
-	
+    
+    public static function getObjectAttr(attrExp:String, object:Object):*
+    {
+        var attrs:Array = attrExp.split('.');
+        var o:Object = object;
+        for each (var attr:String in attrs)
+        {
+            if (o.hasOwnProperty(attr))
+            {
+                o = o[attr];
+            }
+            else
+            {
+                return null;
+            }
+        }
+        
+        return o;
+    }
+    
+    
+    /** 
+     * 是否是数值字符串;  
+     * @param    char 字符串
+     * @return  是否是数值字符串
+     */
+    public static function isNumber(char:String):Boolean
+    {  
+        if (char == null)
+        {  
+            return false;  
+        }  
+        return isDouble(char) || isInteger(char) || isHex(char); 
+    } 
+    
+    /**
+     * 是否为Double型数据
+     * @param    char 字符串
+     * @return    是否为Double型数据;
+     */
+    public static function isDouble(char:String):Boolean 
+    {
+        var pattern:RegExp =/^[-\+]?\d+(\.\d+)?$/;
+        var result:Object = pattern.exec(char);
+        
+        return !(result == null);
+    }
+    
+    
+    /**
+     * Integer 是否为整型
+     * @param    char 字符串
+     * @return
+     */
+    public static function isInteger(char:String):Boolean 
+    {
+        var pattern:RegExp =/^[-\+]?\d+$/;
+        var result:Object = pattern.exec(char);
+        
+        return !(result == null);
+    }
+    
+    /**
+     * 是否为16进制
+     * @param    char 字符串
+     * @return    是否为16进制
+     */
+    public static function isHex(char:String):Boolean 
+    {
+        var pattern:RegExp =/^[0-9A-Fa-f]+$/;
+        var result:Object = pattern.exec(char);
+        
+        return !(result == null);
+    }
+    
+    
+    /**
+     * 是否为Email地址
+     * @param    char 字符串
+     * @return  是否为Email地址
+     */
+    public static function isEmail(char:String):Boolean
+    {  
+        if (char == null)
+        {  
+            return false;  
+        }  
+        char = trim(char);
+        var pattern:RegExp = /(\w|[_.\-])+@((\w|-)+\.)+\w{2,4}+/;   
+        var result:Object = pattern.exec(char);  
+        
+        if (result == null) 
+        {  
+            return false;  
+        }  
+        return true;  
+    }  
+    
 }
 }
 
