@@ -293,7 +293,7 @@
             //TODO for futher optimize when pool size is huge (but don't recommand large pool size).
             for (var i:int = 0; i < pool.length; i++) {
                 if (!pool[i].isWorking) {
-                    return pool[i].loader;
+                    return pool[i];
                 }
             }
             // The pool is full and no more free loader avaiable, waiting for idle loader.
