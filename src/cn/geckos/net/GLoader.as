@@ -69,13 +69,15 @@
         
         // If GLOBAL_POOL_SIZE equals zero means don't reuse the loader from the pool, 
         // creating loader every time when needed. Otherwize obtain loader from pool while there has idle loader avaiable.
-        private static var GLOBAL_POOL_SIZE:int = 0; 
+        private static var gPoolSize:int = 0; 
         private static var gPool:Array = new Array();
         
-        private static var gArray:Array = new Array();
+        private static var gReqArray:Array = new Array();
         private static var gWaitingRoom:Array = new Array();
         
-        private static var gWorkingLoader:BindableLoader;
+        private static var gSeqLoader:BindableLoader;
+        
+        public static var order:String = STACK;
         
         //______INSTANCE SCOPE_____
         
@@ -106,17 +108,17 @@
          * According to the order to choose next request(FIFO or LIFO).
          * @return Boolean false to tell no more request in the array.
          */
-        private function forNext():Object {
+        static private function forNext(arr:Array, order:String):Object {
             // No more request
-            if (reqArray.length <= 0) {
+            if (arr.length <= 0) {
                 return null;
             }
             var o:Object;
             // FIFO
             if (GLoader.QUEUE == order) {
-                o = reqArray.shift();
+                o = arr.shift();
             }else { // LIFO
-                o = reqArray.pop();
+                o = arr.pop();
             }
             return o;
         }
@@ -130,7 +132,7 @@
             if (waitingRoom.length > 0 || sequenceLoader == loader) {
                 var o:Object;
                 if (sequenceLoader == loader) {
-                    o = forNext();
+                    o = GLoader.forNext(reqArray, order);
                     if (o != null) {
                         loader.bind = o;
                         GLoader.request(loader, o.url, o.param, o.method);
@@ -144,7 +146,7 @@
                     var req:Object = waitingRoom.shift();
                     if (req is Array) {
                         sequenceLoader = loader;
-                        o = forNext();  // this order is ***IMPORTANT***
+                        o = forNext(reqArray, order);  // this order is ***IMPORTANT***
                         sequenceLoader.bind = o;
                         GLoader.request(loader, o.url, o.param, o.method);
                     }else {
@@ -160,12 +162,46 @@
             if (loader.floater) {
                 destroyLoader(loader);
             }
-            
+        }
+        static protected function doNext(loader:BindableLoader):void {
+            if (gWaitingRoom.length > 0 || gSeqLoader == loader) {
+                var o:Object;
+                if (gSeqLoader == loader) {
+                    o = GLoader.forNext(gReqArray, order);
+                    if (o != null) {
+                        loader.bind = o;
+                        GLoader.request(loader, o.url, o.param, o.method);
+                        return;
+                    }else {
+                        gSeqLoader = null; // The sequence request array is empty.
+                    }
+                }
+                
+                if (gWaitingRoom.length > 0) {
+                    var req:Object = gWaitingRoom.shift();
+                    if (req is Array) {
+                        gSeqLoader = loader;
+                        o = forNext(gReqArray, order);  // this order is ***IMPORTANT***
+                        gSeqLoader.bind = o;
+                        GLoader.request(loader, o.url, o.param, o.method);
+                    }else {
+                        loader.bind = req;
+                        GLoader.request(loader, req.url, req.param, req.method);
+                    }
+                    return;
+                }
+            }
+            // No requests avaiable.
+            loader.bind = null;
+            loader.isWorking = false;
+            if (loader.floater) {
+                destroyLoader(loader);
+            }
         }
         
         //#####====---->____DEBUG MODE
         
-        protected static function beginDebug(loader:BindableLoader):void {
+        static protected function beginDebug(loader:BindableLoader):void {
             var d:Date = new Date();
             var report:Object = {startTime:d};
             loader.bind.report = report;
@@ -184,7 +220,7 @@
             trace("==================");
         }
         
-        protected static function endDebug(loader:BindableLoader):void {
+        static protected function endDebug(loader:BindableLoader):void {
             var report:Object = loader.bind.report;
             var beginTime:Date = report.startTime;
             var endTime:Date = new Date();
@@ -210,6 +246,37 @@
             loader.addEventListener(HTTPStatusEvent.HTTP_STATUS, onPoolHTTPStatus);
             return loader;
         }
+        static protected function initPoolLoader():BindableLoader {
+            var loader:BindableLoader = new BindableLoader();
+            loader.addEventListener(Event.COMPLETE, onPoolComplete);
+            loader.addEventListener(ProgressEvent.PROGRESS, onPoolProgress);
+            loader.addEventListener(IOErrorEvent.IO_ERROR, onPoolIOError);
+            loader.addEventListener(HTTPStatusEvent.HTTP_STATUS, onPoolHTTPStatus);
+            return loader;
+        }
+        
+        //_______DESTROY LOADER
+        
+        protected function destroyLoader(loader:BindableLoader):void {
+            loader.removeEventListener(Event.COMPLETE, onPoolComplete);
+            loader.removeEventListener(ProgressEvent.PROGRESS, onPoolProgress);
+            loader.removeEventListener(IOErrorEvent.IO_ERROR, onPoolIOError);
+            loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, onPoolHTTPStatus);
+            loader.bind = null;
+            loader.isWorking = false;
+            loader.id = null;
+        }
+        static protected function destroyLoader(loader:BindableLoader):void {
+            loader.removeEventListener(Event.COMPLETE, onPoolComplete);
+            loader.removeEventListener(ProgressEvent.PROGRESS, onPoolProgress);
+            loader.removeEventListener(IOErrorEvent.IO_ERROR, onPoolIOError);
+            loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, onPoolHTTPStatus);
+            loader.bind = null;
+            loader.isWorking = false;
+            loader.id = null;
+        }
+        
+        //_______HTTPStatus
         
         private function onPoolHTTPStatus(e:HTTPStatusEvent):void 
         {
@@ -223,6 +290,20 @@
                 param.callback.status(o);
             }
         }
+        static private function onPoolHTTPStatus(e:HTTPStatusEvent):void 
+        {
+            var loader:BindableLoader = BindableLoader(e.target);
+            var param:Object = loader.bind;
+            if (param.callback != null && param.callback.status != null) {
+                var o:Object = { status:e.status };
+                if (param.callbackId != null) {
+                    o.id = param.callbackId;
+                }
+                param.callback.status(o);
+            }
+        }
+        
+        //_______IOError
         
         private function onPoolIOError(e:IOErrorEvent):void 
         {
@@ -243,6 +324,27 @@
             
             doNext(loader);
         }
+        static private function onPoolIOError(e:IOErrorEvent):void 
+        {
+            var loader:BindableLoader = BindableLoader(e.target);
+            var param:Object = loader.bind;
+            if (param.callback != null && param.callback.ioError != null) {
+                var o:Object = { ioerror:e.toString() };
+                if (param.callbackId != null) {
+                    o.id = param.callbackId;
+                }
+                param.callback.ioError(o);
+            }
+            
+            if (DEBUG) {
+                loader.bind.report.status = "ERROR" + e.toString();
+                GLoader.endDebug(loader);
+            }
+            
+            doNext(loader);
+        }
+        
+        //_______PROGRESS
         
         private function onPoolProgress(e:ProgressEvent):void 
         {
@@ -256,6 +358,20 @@
                 param.callback.progress(o);
             }
         }
+        static private function onPoolProgress(e:ProgressEvent):void 
+        {
+            var loader:BindableLoader = BindableLoader(e.target);
+            var param:Object = loader.bind;
+            if (param.callback != null && param.callback.progress != null) {
+                var o:Object = { loaded:e.bytesLoaded, total:e.bytesTotal };
+                if (param.callbackId != null) {
+                    o.id = param.callbackId;
+                }
+                param.callback.progress(o);
+            }
+        }
+        
+        //_______COMPLETE
         
         private function onPoolComplete(e:Event):void 
         {
@@ -276,8 +392,27 @@
             
             doNext(loader);
         }
+        static private function onPoolComplete(e:Event):void 
+        {
+            var loader:BindableLoader = BindableLoader(e.target);
+            var param:Object = loader.bind;
+            if (param.callback != null && param.callback.complete != null) {
+                var o:Object = {data:loader.data};
+                if (param.callbackId != null) {
+                    o.id = param.callbackId;
+                }
+                param.callback.complete(o);
+            }
+            
+            if (DEBUG) {
+                loader.bind.report.status = "COMPLETE";
+                GLoader.endDebug(loader);
+            }
+            
+            doNext(loader);
+        }
         
-        //######====---->____Class Function
+        //_______Get Loader
         
         protected function getLoader():BindableLoader {
             var loader:BindableLoader;
@@ -310,17 +445,48 @@
                 return loader;
             }
         }
+        static protected function getLoader():BindableLoader {
+            var loader:BindableLoader;
+            if (gPoolSize == 0) {
+                loader = initPoolLoader();
+                if (DEBUG) {
+                    var d:Date = new Date();
+                    loader.id = String(d.time);
+                }
+                loader.floater = true;
+                return loader;
+            }
+            //TODO for futher optimize when pool size is huge (but don't recommand large pool size).
+            for (var i:int = 0; i < gPool.length; i++) {
+                if (!gPool[i].isWorking) {
+                    return gPool[i];
+                }
+            }
+            // The pool is full and no more free loader avaiable, waiting for idle loader.
+            if (gPool.length == gPoolSize) {
+                //No idle loader avaiable
+                return null;
+            }else {
+                loader = initPoolLoader();
+                gPool.push(loader);
+                
+                if (DEBUG) {
+                    loader.id = String(gPool.length - 1);
+                }
+                return loader;
+            }
+        }
         
         /**
          * Push request to the waiting room, there are two types of parameter pass to the wait function 
          * Object and Array, Object for individual request and Array for a sequence of requests.
          * @param	obj 
          */
-        protected function wait(obj:Object):void {
-            waitingRoom.push(obj);
+        static protected function wait(room:Array, obj:Object):void {
+            room.push(obj);
         }
         
-        private static function request(loader:BindableLoader, url:String, param:Object, method:String):void {
+        static private function request(loader:BindableLoader, url:String, param:Object, method:String):void {
             var r:URLRequest = new URLRequest(url);
             var p:URLVariables = new URLVariables();
             for (var key:String in param) {
@@ -336,6 +502,8 @@
             }
         }
         
+        //_______APPEND
+        
         public function append(url:String, 
                                param:Object, 
                                callbackFun:Object, 
@@ -348,10 +516,28 @@
                     sequenceLoader = loader;
                     doNext(loader);
                 }else {
-                    wait(reqArray);
+                    wait(waitingRoom, reqArray);
                 }
             }
         }
+        static public function append(url:String, 
+                                      param:Object, 
+                                      callbackFun:Object, 
+                                      method:String="POST", 
+                                      callbackId:String=null):void {
+            gReqArray.push(createObject(url, param, callbackFun, method, callbackId));
+            if (gSeqLoader == null) {
+                var loader:BindableLoader = getLoader();
+                if (loader != null) {
+                    gSeqLoader = loader;
+                    doNext(loader);
+                }else {
+                    wait(gWaitingRoom, gReqArray);
+                }
+            }
+        }
+        
+        //_______PREPPEND
         
         public function preppend(url:String, 
                                  param:Object, 
@@ -365,32 +551,83 @@
                     sequenceLoader = loader;
                     doNext(loader);
                 }else {
-                    wait(reqArray);
+                    wait(waitingRoom, reqArray);
                 }
             }
         }
+        static public function preppend(url:String, 
+                                        param:Object, 
+                                        callbackFun:Object, 
+                                        method:String="POST", 
+                                        callbackId:String=null):void {
+            gReqArray.unshift(createObject(url, param, callbackFun, method, callbackId));
+            if (gSeqLoader == null) {
+                var loader:BindableLoader = getLoader();
+                if (loader != null) {
+                    gSeqLoader = loader;
+                    doNext(loader);
+                }else {
+                    wait(gWaitingRoom, gReqArray);
+                }
+            }
+        }
+        
+        //_______POST
         
         public function rPost(url:String, param:Object, callbackFun:Object, callbackId:*=null):void {
             var loader:BindableLoader = getLoader();
             var obj:Object = GLoader.createObject(url, param, callbackFun, URLRequestMethod.POST, callbackId);
             if (loader == null) {
-                wait(obj);
+                wait(waitingRoom, obj);
                 return;
             }
             loader.bind = obj;
             GLoader.request(loader, url, param, URLRequestMethod.POST);
         }
+        static public function rPost(url:String, 
+                                     param:Object, 
+                                     callbackFun:Object, 
+                                     callbackId:String=null):void {
+            var loader:BindableLoader = getLoader();
+            var obj:Object = createObject(url, param, callbackFun, URLRequestMethod.POST, callbackId);
+            if (loader == null) {
+                wait(gWaitingRoom, obj);
+                return;
+            }
+            loader.bind = obj;
+            request(loader, url, param, URLRequestMethod.POST);
+        }
         
-        public function rGet(url:String, param:Object, callbackFun:Object, callbackId:*=null):void {
+        //_______GET
+        
+        public function rGet(url:String, 
+                             param:Object, 
+                             callbackFun:Object, 
+                             callbackId:*=null):void {
             var loader:BindableLoader = getLoader();
             var obj:Object = GLoader.createObject(url, param, callbackFun, URLRequestMethod.GET, callbackId);
             if (loader == null) {
-                wait(obj);
+                wait(waitingRoom, obj);
                 return;
             }
             loader.bind = obj;
             GLoader.request(loader, url, param, URLRequestMethod.GET);
         }
+        static public function rGet(url:String, 
+                                    param:Object, 
+                                    callbackFun:Object, 
+                                    callbackId:String=null):void {
+            var loader:BindableLoader = getLoader();
+            var obj:Object = createObject(url, param, callbackFun, URLRequestMethod.GET, callbackId);
+            if (loader == null) {
+                wait(gWaitingRoom, obj);
+                return;
+            }
+            loader.bind = obj;
+            GLoader.request(loader, url, param, URLRequestMethod.GET);
+        }
+        
+        //_______STOP
         
         public function stop():void {
             if (sequenceLoader != null) {
@@ -402,6 +639,18 @@
                 sequenceLoader = null;
             }
         }
+        static public function stop():void {
+            if (gSeqLoader != null) {
+                try {
+                    gSeqLoader.close();
+                }catch (err:Error){}
+                gSeqLoader.bind = null;
+                gSeqLoader.isWorking = false;
+                gSeqLoader = null;
+            }
+        }
+        
+        //_______STOP ALL
         
         public function stopAll():void {
             for (var i:int = 0; i < pool.length; i++) {
@@ -414,6 +663,18 @@
                 }
             }
             sequenceLoader = null;
+        }
+        static public function stopAll():void {
+            for (var i:int = 0; i < gPool.length; i++) {
+                if (gPool[i].isWorking) {
+                    try {
+                        gPool[i].close();
+                    }catch (err:Error){}
+                    gPool[i].bind = null;
+                    gPool[i].isWorking = false;
+                }
+            }
+            gSeqLoader = null;
         }
         
         /**
@@ -435,35 +696,23 @@
             }
             return c;
         }
-        
-        //######====---->>>>____Static Function
-        
-        public static function append(url:String, param:Object, callbackFun:Object, method:String="POST", callbackId:String=null):void {
-            
+        static public function numFree():int {
+            if (gPoolSize == 0) {
+                return -1;
+            }
+            var c:int = 0;
+            for (var i:int = 0; i < gPool.length; i++) {
+                if (!gPool[i].isWorking) {
+                    c++;
+                }
+            }
+            if (gPool.length != gPoolSize) {
+                c += gPoolSize - gPool.length;
+            }
+            return c;
         }
         
-        public static function preppend(url:String, param:Object, callbackFun:Object, method:String="POST", callbackId:String=null):void {
-            
-        }
-        
-        public static function rPost(url:String, param:Object, callbackFun:Object, callbackId:String=null):void {
-            
-        }
-        
-        public static function rGet(url:String, param:Object, callbackFun:Object, callbackId:String=null):void {
-            
-        }
-        
-        public static function stop():void {
-            
-        }
-        
-        public static function stopAll():void {
-            trace("stop all in class");
-        }
-        
-        
-        private static function createObject(url:String, 
+        static private function createObject(url:String, 
                                             param:Object, 
                                             callbackFun:Object, 
                                             method:String, 
@@ -471,15 +720,6 @@
             return {url:url, param:param, callback:callbackFun, method:method, callbackId:callbackId}
         }
         
-        protected function destroyLoader(loader:BindableLoader):void {
-            loader.removeEventListener(Event.COMPLETE, onPoolComplete);
-            loader.removeEventListener(ProgressEvent.PROGRESS, onPoolProgress);
-            loader.removeEventListener(IOErrorEvent.IO_ERROR, onPoolIOError);
-            loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, onPoolHTTPStatus);
-            loader.bind = null;
-            loader.isWorking = false;
-            loader.id = null;
-        }
         
         /**
          * Fetch and change the pool size.
@@ -500,6 +740,23 @@
                 }
             }
             poolSize = value;
+        }
+        static public function get size():int { return gPoolSize; }
+        
+        static public function set size(value:int):void 
+        {
+            if (value < 0 || value == gPoolSize) {
+                return;
+            }
+            if (value < gPoolSize) {
+                var i:int = gPool.length - 1;
+                while (i >= value) {
+                    var loader:BindableLoader = gPool.pop();
+                    loader.floater = true;
+                    i--;
+                }
+            }
+            gPoolSize = value;
         }
     }
 }
