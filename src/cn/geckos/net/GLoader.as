@@ -481,12 +481,23 @@
             loader.id = null;
         }
         
+        /**
+         * Fetch and change the pool size.
+         */ 
         public function get size():int { return poolSize; }
         
         public function set size(value:int):void 
         {
-            if (value < 0) {
+            if (value < 0 || value == poolSize) {
                 return;
+            }
+            if (value < poolSize) {
+                var i:int = pool.length - 1;
+                while (i >= value) {
+                    var loader:BindableLoader = pool.pop();
+                    loader.floater = true;
+                    i--;
+                }
             }
             poolSize = value;
         }
