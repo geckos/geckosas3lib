@@ -1,5 +1,6 @@
 ﻿package cn.geckos.utils
 {
+	import flash.geom.Point;
 public class MathUtil
 {
 
@@ -47,6 +48,20 @@ public class MathUtil
         return angle;
     }
 	
+	/**
+     *
+     */ 
+    public static function fixHalfAngle(angle:Number):Number
+    {
+        angle %= 180;
+        
+        if (angle < 0)
+        {
+            return angle + 180;
+        }
+        
+        return angle;
+    }
 	
 	/**
     * 求取阶乘
@@ -183,6 +198,30 @@ public class MathUtil
 		return { "A":A, "B":B, "C":C };
 	}
 	
+	/**
+	 * 旋转公式
+	 * @param	dx 旋转物体的x-中心点的x
+	 * @param	dy 旋转物体的y-中心点的y
+	 * @param	sin 根据角度求出sin
+	 * @param	cos 根据角度求出cos
+	 * @param	reverse 顺时针 逆时针
+	 * @return  新的坐标
+	 */
+	public static function rotate(dx:Number, dy:Number, sin:Number, cos:Number, reverse:Boolean):Point
+	{
+		var point:Point = new Point();
+		if (reverse) 
+		{
+			point.x = dx * cos + dy * sin;
+			point.y = dy * cos - dx * sin;
+		}
+		else 
+		{
+			point.x = dx * cos - dy * sin;
+			point.y = dy * cos + dx * sin;
+		}
+		return point;
+	}
 
 }
 }

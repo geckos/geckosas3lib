@@ -1,4 +1,4 @@
-package cn.geckos.geom
+﻿package cn.geckos.geom
 {
 import cn.geckos.api.ICloneable;
 import cn.geckos.utils.MathUtil;
