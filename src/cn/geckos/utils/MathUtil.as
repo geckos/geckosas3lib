@@ -232,7 +232,7 @@ public class MathUtil
 	 */
 	public static function arithmeticSequenceIndexValue(sn:uint, d:uint):Number
 	{	
-		var n:uint = this.arithmeticSequenceIndex(sn, d);
+		var n:uint = MathUtil.arithmeticSequenceIndex(sn, d);
 		return (n + 1) * d - (d - 1);
 	}
 
