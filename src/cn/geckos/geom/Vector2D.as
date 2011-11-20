@@ -234,6 +234,18 @@ public class Vector2D implements ICloneable
     {
         return (this.dot(v) == 0);
     }
+	
+	/**
+	 * 求2个向量的中点坐标公式
+	 * @param	v  向量
+	 * @return  中心坐标
+	 */
+	public function centerPoint(v:Vector2D):Vector2D
+	{
+		var x:Number = (v.x + this._x) / 2;
+		var y:Number = (v.y + this._y) / 2;
+		return new Vector2D(x, y);
+	}
     
     /**
      * 描述向量实例的字符窜
