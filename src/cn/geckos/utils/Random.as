@@ -138,6 +138,16 @@ public class Random
     {
         return Math.random();
     }
+	
+	/**
+	 * 计算概率
+	 * @param	chance 概率
+	 * @return
+	 */
+	public static function boolean(chance:Number = .5):Boolean
+	{
+		return (Random.random() < chance) ? 1:0;
+	}
     
 }
 }
