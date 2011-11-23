@@ -1,4 +1,4 @@
-package cn.geckos.utils
+﻿package cn.geckos.utils
 {
 public class Random
 {
@@ -146,7 +146,7 @@ public class Random
 	 */
 	public static function boolean(chance:Number = .5):Boolean
 	{
-		return (Random.random() < chance) ? 1:0;
+		return (Random.random() < chance) ? true:false;
 	}
     
 }
