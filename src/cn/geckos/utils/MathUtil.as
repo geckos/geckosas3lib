@@ -1,6 +1,6 @@
 ﻿package cn.geckos.utils
 {
-	import flash.geom.Point;
+import flash.geom.Point;
 public class MathUtil
 {
 
@@ -222,6 +222,39 @@ public class MathUtil
 		}
 		return point;
 	}
+	
+	
+	/**
+	 * 根据项数和公差求出等差数列项数所对应的值 
+	 * @param	sn  n项的和
+	 * @param	d   公差
+	 * @return  项数所对应的值
+	 */
+	public static function arithmeticSequenceIndexValue(sn:uint, d:uint):Number
+	{	
+		var n:uint = MathUtil.arithmeticSequenceIndex(sn, d);
+		return (n + 1) * d - (d - 1);
+	}
 
+	/**
+	 * 根据数列的和求出等差数列项的次数
+	 * @param	sn  n项的和
+	 * @param	d   公差
+	 * @return  项的次数
+	 */
+	public static function arithmeticSequenceIndex(sn:uint, d:uint):uint
+	{
+		//前n项和公式为：Sn=n×a1+n×(n-1)×(d/2); 
+		//等差数列分解因式公式
+		//d/2×n^2-(1-d/2)×n-dis = 0
+		//一元二次方程表示法 ax^2+bx+c = 0;
+		//一元二次方程 带入公式法  x = -b+Math.sqrt(b^2-4ac)/2a;
+		var hd:Number = d * .5;
+		var a:Number = hd;
+		var b:Number = 1 - hd;
+		var c:int = -sn;
+		return ( -b + Math.sqrt(b * b - (4 * a * c))) / (2 * a);
+	}
+	
 }
 }
