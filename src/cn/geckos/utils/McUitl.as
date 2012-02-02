@@ -1,9 +1,7 @@
 ﻿package cn.geckos.utils
 {
-    import flash.display.FrameLabel;
-    import flash.display.MovieClip;
-    
-
+import flash.display.FrameLabel;
+import flash.display.MovieClip;
 public class McUitl
 {
     /**
