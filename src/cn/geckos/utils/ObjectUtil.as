@@ -28,7 +28,7 @@ public class ObjectUtil
 	 * @param	o
 	 * @return
 	 */
-	public function getLength(o:Object):int
+	public static function getLength(o:Object):int
 	{
 		var count:int = 0;
 		for (var key:* in o)
