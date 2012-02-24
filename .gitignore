@@ -1,1 +1,16 @@
 .DS_Store
+Thumbs.db
+
+/.settings/*
+/html-template/*
+/bin-debug/*
+/bin-release/*
+/bin/*
+
+.actionScriptProperties
+.flexProperties
+.flexLibProperties
+.FlexUnitSettings
+.project
+.sourceMate
+.fxpProperties
