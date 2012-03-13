@@ -22,5 +22,20 @@ public class ObjectUtil
         
         return true;        
     }
+	
+	/**
+	 * 获取对象长度
+	 * @param	o
+	 * @return
+	 */
+	public static function getLength(o:Object):int
+	{
+		var count:int = 0;
+		for (var key:* in o)
+		{
+			count++;
+		}
+		return count;
+	}
 }
 }
