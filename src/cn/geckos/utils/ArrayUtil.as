@@ -215,8 +215,19 @@ public final class ArrayUtil
         array[index2] = temp;
     }
 	
-	
-	
+	/**
+	 * 清除列表
+	 * @param	ary 列表
+	 */
+	public static function clearList(ary:Array):void
+	{
+		if (!ary) return;
+		var length:int = ary.length;
+		for (var i:int = length - 1; i >= 0; i -= 1)
+		{
+			ary.splice(i, 1);
+		}
+	}
 }
 }
 
