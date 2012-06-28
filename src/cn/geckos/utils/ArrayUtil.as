@@ -228,6 +228,23 @@ public final class ArrayUtil
 			ary.splice(i, 1);
 		}
 	}
+	
+	/**
+	 * 克隆一个数组
+	 * @param	ary 需要克隆的数组
+	 */
+	public static function cloneList(ary:Array):void
+	{
+		if (!ary) return null
+		var length:int = ary.length;
+		var list:Array = [];
+		for (var i:int = 0; i < length; i++) 
+		{
+			list.push(ary[i]);
+		}
+		return list;
+	}
+	
 }
 }
 
