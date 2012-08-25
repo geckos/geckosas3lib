@@ -177,7 +177,7 @@ public class LineSegment implements ICloneable
 		var slope:Number = this.getLineSlope();
 		var startPoint:Vector2D = this.startPoint;
 		var endPoint:Vector2D = point;
-		return ((endPoint.y - startPoint.y) / (endPoint.x - startPoint.x)) == slope;
+		return Math.abs(((endPoint.y - startPoint.y) / (endPoint.x - startPoint.x)) - slope)  < .0000001;
 	}
 
 	
@@ -310,13 +310,26 @@ public class LineSegment implements ICloneable
 		//method 1:
 		if(!this.isInLineTrack(point)) return false;
 		
-		var dx:Number = this.endPoint.x - this.startPoint.x;
-		var dy:Number = this.endPoint.y - this.startPoint.y;
-		var tempDx:Number = point.x - this.startPoint.x;
-		var tempDy:Number = point.y - this.startPoint.y;
+		var spTempDx:Number = this.startPoint.x - point.x; 
+		var spTempDy:Number = this.startPoint.y - point.y;
 		
-		//考虑二进制舍入误差
-		return (dx * tempDy - dy * tempDx) < .0000001;
+		var epTempDx:Number = this.endPoint.x - point.x;
+		var epTempDy:Number = this.endPoint.y - point.y;
+		
+		
+		//差积是否为0，判断是否在同一直线上
+		if ((spTempDx * epTempDy - epTempDx * spTempDy) > .0000001)
+			return false;
+			
+		//判断是否在线段上
+		if ((point.x >  this.startPoint.x && point.x > this.endPoint.x) || 
+			(point.x <  this.startPoint.x && point.x < this.endPoint.x))
+			return false;
+		
+		if ((point.y > this.startPoint.y && point.y > this.endPoint.y) ||
+			(point.y < this.startPoint.y && point.y < this.endPoint.y))
+			return false;
+		return true;
 	}
 }
 }
