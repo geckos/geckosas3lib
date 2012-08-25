@@ -232,8 +232,9 @@ public final class ArrayUtil
 	/**
 	 * 克隆一个数组
 	 * @param	ary 需要克隆的数组
+	 * @return  克隆的数组
 	 */
-	public static function cloneList(ary:Array):void
+	public static function cloneList(ary:Array):Array
 	{
 		if (!ary) return null
 		var length:int = ary.length;
