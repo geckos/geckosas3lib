@@ -1,6 +1,7 @@
 ﻿package cn.geckos.geom
 {
 import cn.geckos.api.ICloneable;
+import cn.geckos.utils.MathUtil;
 
 /////////////////////////////////////////
 //
@@ -130,6 +131,37 @@ public class LineSegment implements ICloneable
 		return (slopeA * slopeB) == -1;
 	}
     
+	/**
+	 * 判断2条线是否平行
+	 * 对垂直线不起作用, 垂直的线会遇到(y / 0)的情况
+	 * @param	line
+	 * @return
+	 */
+	public function isParallel(line:LineSegment):Boolean
+	{
+		var slopA:Number = this.getLineSlope();
+		var slopB:Number = line.getLineSlope();
+		return (slopA == slopB);
+	}
+	
+	
+	/**
+	 * 求出2条线之间的夹角
+	 * 公式 tanA = |(k2-k1)/(1-k1*k2)| (0 < A < 90);
+	 * 对垂直线不起作用, 垂直的线会遇到(y / 0)的情况
+	 * @param	line  求出2条线之间的夹角
+	 * @param	degrees 是否返回角度值
+	 * @return
+	 */
+	public function angleBetween(line:LineSegment,degrees:Boolean = true):Number
+	{
+		var slopA:Number = this.getLineSlope();
+		var slopB:Number = line.getLineSlope();
+		var tanA:Number = Math.abs((slopB - slopA) / (1 + slopA * slopB));
+		var angle:Number = Math.atan(tanA);
+		if (degrees) angle = MathUtil.rds2dgs(angle);
+		return angle;
+	}
 	
 	/**
 	 * 如果已知改线段和参数line线段垂直, 取得改line线段的斜率
