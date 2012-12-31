@@ -1,59 +1,10 @@
-﻿package cn.geckos.utils
-{
-/**
- * TrackUtil for debug purpose
- *
- * @example 
- * import cn.geckos.utils.TraceUtil;
- *
- * var o:Object = {"a" : 123, 
- *				"b" : "222", 
- *				"c":[1, 2, "bcd", new Sprite()], 
- *				"e":new Array(1, 3, 4, 5), 
- *				"g":<roots r='test'>abcd</roots>,
- *				"h":new <int>[1, 2, 3] 
- *				};
- * 
- * TraceUtil.dump(o); 
- * 
- * or 
- * 
- * var s:String = TraceUtil.rdump(o);
- * trace(s);
- * 
- *  beginDump ----> {
- *		c : Array{
- *			0 : 1 <int> 
- *			1 : 2 <int> 
- *			2 : bcd <String> 
- *			3 : [object Sprite] <flash.display::Sprite> 
- *		}
- *		h : __AS3__.vec::Vector.<int>{
- *			0 : 1 <int> 
- *			1 : 2 <int> 
- *			2 : 3 <int> 
- *		}
- *		e : Array{
- *			0 : 1 <int> 
- *			1 : 3 <int> 
- *			2 : 4 <int> 
- *			3 : 5 <int> 
- *		}
- *		b : 222 <String> 
- *		g : abcd <XML> 
- *		a : 123 <int> 
- *	endDump <-----}
- * 
- */
+package utils
+{	
 import flash.utils.describeType;
+import flash.utils.getQualifiedClassName;
 
 public class TraceUtil
 {
-	public function TraceUtil()
-	{
-	}
-	
-	
 	/**
 	 * get repeat string
 	 *
@@ -62,13 +13,12 @@ public class TraceUtil
 	 * @return
 	 */
 	public static function getRepeat(str:String, repeat:int):String {
-		var s:Array = [];
-		for (var i:int = 1; i <= repeat; i ++) {
-			s[s.length] = str;
+		var s:String = "";
+		for(var i:int = 1; i <= repeat; i ++){
+			s += str;
 		}
-		return s.join("");
+		return s;
 	}
-	
 	
 	/**
 	 * check param o whether has none property
@@ -80,9 +30,8 @@ public class TraceUtil
 		for (var i:* in o) {
 			item ++;
 		}
-		return Boolean(item == 0);
+		return item == 0;
 	}
-	
 	
 	/**
 	 * get object's type
@@ -97,9 +46,8 @@ public class TraceUtil
 		return String(xml.@name);
 	}
 	
-	
 	/**
-	 * prefix to format output data (we need prefix is tab space)
+	 * prefix to format output data (we need prefix is tab space) 
 	 */
 	private static var prefix:String = "\t";
 	
@@ -112,7 +60,7 @@ public class TraceUtil
 	/**
 	 * check the object is whether dynamic
 	 * @param o
-	 * @return
+	 * @return 
 	 */
 	public static function isDynamic(o:Object):Boolean {
 		if(!RecordCache.has(o)){
@@ -123,38 +71,47 @@ public class TraceUtil
 	}
 	
 	private static var outputstr:String = "";
+	private static var _timeStamp:Date;
+	private static var _title:String;
 	
 	/**
 	 * dump the generic object for debug
 	 * this method only run the 'trace' method to dump, not return any value
 	 * @param o
 	 */
-	public static function dump(o:Object):void {
-		outputstr = "";
-		outputstr += "beginDump ----> {" + "\n";
+	public static function dump(o:Object, title:String = null):void {
+		_title = title == null ? "" : title;
+		outputstr += (_title + "\n");
+		outputstr += ("begin Dump ------> " + "{" + "\n");
 		outputstr += rdump(o);
-		outputstr += "endDump <-----}";
+		outputstr += ("end Dump ------>" + "}" + "\n");
 		output(outputstr);
-	}//
+		outputstr = "";
+	}
 	
 	/**
 	 * this method return dump string
 	 */ 
-	public static function rdump(o:Object, r:int = 1):String {
+	private static function rdump(o:Object, r:int = 1):String {
 		var s:String = "";
 		var pre:String = getRepeat(prefix, r);
+		var k:int;
 		for (var item:* in o) {
-			if (typeof(o[item]) == "object" && isDynamic(o[item])) {
-				s += pre + String(item) + " : " + getType(o[item]) + "{" + "\n";
-				var k:int = r;
+			if (typeof(o[item]) == "object") {
+				s += pre + String(item) + " : " + type(o[item]) + "{" + "\n";
+				k = r;
 				s += rdump(o[item], ++k);
 				s += pre + "}" + "\n";
 			}
 			else {
-				s += pre + String(item) + " : " + String(o[item]) + " <" + getType(o[item]) + "> " + "\n";
+				s += pre + String(item) + " : " + String(o[item]) + " <" + type(o[item]) + "> " + "\n";
 			}
 		}
 		return s;
+	}
+	
+	private static function type(d:Object):String{
+		return getQualifiedClassName(d);
 	}
 }
 }
@@ -166,18 +123,17 @@ import flash.utils.Dictionary;
  * 
  * this class cache "describeType" 's xml
  */ 
-internal class RecordCache{
-	public function RecordCache():void{
-	}
+internal class RecordCache
+{
 	private static var cache:Dictionary = new Dictionary(true);
-	public static function add(o:Object, xml:XML):void {
-		if (has(o)) {
+	public static function add(o:Object, xml:XML):void{
+		if(has(o)){
 			return;
 		}
 		cache[o] = xml;
 	}
-	//"toString" is Dictionary's method, and "in" will return true
-	//may be you need check with object's method "hasOwnProperty"
+	// if o is dictionary's internal function's name, 
+	// e.g (toString, our xml isn't inject into cache, so just add below test to prevent this case occur) 
 	public static function has(o:Object):Boolean{
 		return o in cache && typeof(cache[o]) != "function";
 	}
