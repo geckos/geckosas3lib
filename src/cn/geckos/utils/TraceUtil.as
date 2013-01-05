@@ -1,4 +1,4 @@
-package utils
+package cn.geckos.utils
 {	
 import flash.utils.describeType;
 import flash.utils.getQualifiedClassName;
