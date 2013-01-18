@@ -24,9 +24,7 @@ public class ClassUtil
 			for (var c:Class = type; c != Object; c = Class(getDefinitionByName(getQualifiedSuperclassName(c))))
 			{
 				if (c == superClass)
-				{
 					return true;
-				}
 			}
 		}
 		catch(e:Error)

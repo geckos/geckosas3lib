@@ -57,7 +57,6 @@ public class ObjectUtil
 		var type:Class = getDefinitionByName(typeName) as Class;
 		//注册Class
 		registerClassAlias(packageName, type);
-		
 		var copier:ByteArray = new ByteArray();
 		copier.writeObject(source);
 		copier.position = 0;
