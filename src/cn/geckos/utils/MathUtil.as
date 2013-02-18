@@ -49,6 +49,21 @@ public class MathUtil
     }
 	
 	/**
+	 * 修正数字 在一个范围内
+	 * @param	num     需要修正的数字
+	 * @param	min     最小的范围
+	 * @param	range   最大范围
+	 * @return  修正后的数字
+	 */
+	public static function fixNumber(num:Number, min:Number, range:Number):Number
+	{
+		num %= range;
+        if (num < min)
+            return num + range;
+        return num;
+	}
+	
+	/**
      *
      */ 
     public static function fixHalfAngle(angle:Number):Number
