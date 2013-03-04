@@ -406,6 +406,36 @@ public final class StringUtil
         return true;  
     }  
     
+	/**
+	 * 翻转字符串
+	 * @param	str 字符串
+	 * @return  翻转后的字符串
+	 */
+	public static function reverse(str:String):String
+	{
+		if (str.length > 1)  
+           return reverse(str.substring(1)) + str.substring(0, 1);  
+       else  
+           return str;   
+	}
+	
+	/**
+	 * 获得字符串的字节长度
+	 * @param	str  字符串
+	 * @return  长度
+	 */         
+	public static function getByteLen(str:String):int 
+	{
+        var len:int = -1;
+        if (str)
+		{
+			var ba:ByteArray = new ByteArray();
+			//如果使用的是UTF8的编码，用这个可以得到
+			ba.writeMultiByte(str, "UTF-8");
+			len = ba.length;
+        }
+        return len;
+	}
 }
 }
 
