@@ -10,6 +10,7 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.geom.Transform;
+import flash.text.TextField;
 /**
  * ...显示对象工具
  * @author Kanon
