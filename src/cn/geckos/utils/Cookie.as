@@ -4,21 +4,19 @@ import flash.net.SharedObject;
 /**
  * ...本地存储工具
  * @author ...Kanon
+ * 
+ * Sample
+ * if (Cookie.read("username") == null) {
+ *    Cookie.save("username", "jeff");
+ * }
+ *
  */
 public class Cookie 
 {
 	//共享对象
 	private static var so:SharedObject;
 	//共享对象名字
-	private static const name:String = "cookie";
-	/**
-	 * 初始化
-	 */
-	public static function init(name:String = ""):void
-	{
-		if (!name) name = Cookie.name;
-		Cookie.so = SharedObject.getLocal(name);
-	}
+	public static name:String = "cookie";
 	
 	/**
 	 * 保存数据
@@ -27,7 +25,9 @@ public class Cookie
 	 */
 	public static function save(key:String, value:String):void
 	{
-		if (!Cookie.so) return;
+		if (!Cookie.so) {
+            Cookie.so = SharedObject.getLocal(Cookie.name);
+        }
 		Cookie.so.data[key] = value;
 		Cookie.so.flush();
 	}
