@@ -9,7 +9,10 @@ import flash.net.SharedObject;
  * if (Cookie.read("username") == null) {
  *    Cookie.save("username", "jeff");
  * }
- *
+ * 
+ * Expire Sample
+ * var d:Date = new Date();
+ * Cookie.save("username", "jeff", d.time + 3600 * 1000); // Save data by key username for 1 hour
  */
 public class Cookie 
 {
@@ -31,10 +34,13 @@ public class Cookie
 	 * 保存数据
 	 * @param	key		存储键值
 	 * @param	value	需要存储的值
+     * @param   expireDatetime  过期日期时间的毫秒数，Date.time
 	 */
-	public static function save(key:String, value:String):void
+	public static function save(key:String, value:String, expireDatetime:Number=0):void
 	{
-        // TODO Add expire datetime
+        if (expireDatetime > 0) {
+            value = expireDatetime + "@" +  value;
+        }
 		Cookie.init();
 		Cookie.so.data[key] = value;
 		Cookie.so.flush();
@@ -47,9 +53,26 @@ public class Cookie
 	 */
 	public static function read(key:String):String
 	{
-        // TODO According to the expire datetime whether to delete this key or return it.
 		Cookie.init();
-		return Cookie.so.data[key];
+        var value:String = Cookie.so.data[key];
+        if (value && value.indexOf("@") == 13) {
+            var results:Array = value.split("@");
+            var expireDatetime:Number = Number(results[0].substring(0, 13));
+            if (isNaN(expireDatetime)) {
+                // 前13位不是过期日期时间的毫秒数
+                return value;
+            } else {
+                var now:Date = new Date();
+                if (now.time > expireDatetime) {
+                    // 过期了
+                    remove(key);
+                    return null;
+                } else {
+                    return results[1];
+                }
+            }
+        }
+		return value;
 	}
 	
 	/**
