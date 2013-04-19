@@ -73,11 +73,7 @@ public class Cookie
 	public static function clearAll():void
 	{
 		Cookie.init();
-		for (var key:String in Cookie.so.data) 
-		{
-			Cookie.so.data[key] = null;
-			delete Cookie.so.data[key];
-		}
+		Cookie.so.clear();
 	}
 }
 }
