@@ -17,11 +17,15 @@ public class Cookie
 	private static var so:SharedObject;
 	//共享对象名字
 	public static var name:String = "cookie";
-
-    private static function init():void {
-        if (!Cookie.so) 
-            Cookie.so = SharedObject.getLocal(Cookie.name);
-    }
+	
+	/**
+	 * 初始化cookie
+	 */
+	private static function init():void 
+	{
+		if (!Cookie.so) 
+			Cookie.so = SharedObject.getLocal(Cookie.name);
+	}
 	
 	/**
 	 * 保存数据
@@ -30,7 +34,7 @@ public class Cookie
 	 */
 	public static function save(key:String, value:String):void
 	{
-		init();
+		Cookie.init();
 		Cookie.so.data[key] = value;
 		Cookie.so.flush();
 	}
@@ -42,7 +46,7 @@ public class Cookie
 	 */
 	public static function read(key:String):String
 	{
-		init();
+		Cookie.init();
 		return Cookie.so.data[key];
 	}
 	
@@ -52,7 +56,7 @@ public class Cookie
 	 */
 	public static function remove(key:String):void
 	{
-		if (!Cookie.so) return;
+		Cookie.init();
 		if (Cookie.so.data[key])
 		{
 			Cookie.so.data[key] = null;
@@ -66,13 +70,11 @@ public class Cookie
 	 */
 	public static function clearAll():void
 	{
-		if (Cookie.so)
+		Cookie.init();
+		for (var key:String in Cookie.so.data) 
 		{
-			for (var key:String in Cookie.so.data) 
-			{
-				Cookie.so.data[key] = null;
-				delete Cookie.so.data[key];
-			}
+			Cookie.so.data[key] = null;
+			delete Cookie.so.data[key];
 		}
 	}
 }
