@@ -45,5 +45,35 @@ public class Cookie
 		init();
 		return Cookie.so.data[key];
 	}
+	
+	/**
+	 * 删除一条数据
+	 * @param	key 数据对应的key
+	 */
+	public static function remove(key:String):void
+	{
+		if (!Cookie.so) return;
+		if (Cookie.so.data[key])
+		{
+			Cookie.so.data[key] = null;
+			Cookie.so.flush();
+			delete Cookie.so.data[key];
+		}
+	}
+	
+	/**
+	 * 清除所有cookie数据
+	 */
+	public static function clearAll():void
+	{
+		if (Cookie.so)
+		{
+			for (var key:String in Cookie.so.data) 
+			{
+				Cookie.so.data[key] = null;
+				delete Cookie.so.data[key];
+			}
+		}
+	}
 }
 }
