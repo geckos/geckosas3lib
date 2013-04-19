@@ -16,7 +16,17 @@ public class Cookie
 	//共享对象
 	private static var so:SharedObject;
 	//共享对象名字
-	public static name:String = "cookie";
+	private static name:String = "cookie";
+	
+	/**
+	 * 初始化
+	 * @param	name  cookie名
+	 */
+	public static function init(name:String = ""):void
+	{
+		if (name) Cookie.name = name;
+		Cookie.so = SharedObject.getLocal(Cookie.name);
+	}
 	
 	/**
 	 * 保存数据
@@ -25,9 +35,7 @@ public class Cookie
 	 */
 	public static function save(key:String, value:String):void
 	{
-		if (!Cookie.so) {
-            Cookie.so = SharedObject.getLocal(Cookie.name);
-        }
+		if (!Cookie.so) Cookie.init();
 		Cookie.so.data[key] = value;
 		Cookie.so.flush();
 	}
