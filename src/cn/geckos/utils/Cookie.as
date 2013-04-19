@@ -34,6 +34,7 @@ public class Cookie
 	 */
 	public static function save(key:String, value:String):void
 	{
+        // TODO Add expire datetime
 		Cookie.init();
 		Cookie.so.data[key] = value;
 		Cookie.so.flush();
@@ -46,6 +47,7 @@ public class Cookie
 	 */
 	public static function read(key:String):String
 	{
+        // TODO According to the expire datetime whether to delete this key or return it.
 		Cookie.init();
 		return Cookie.so.data[key];
 	}
