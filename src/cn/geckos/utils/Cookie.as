@@ -16,7 +16,7 @@ public class Cookie
 	//共享对象
 	private static var so:SharedObject;
 	//共享对象名字
-	private static name:String = "cookie";
+	private static var name:String = "cookie";
 	
 	/**
 	 * 初始化
