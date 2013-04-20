@@ -279,5 +279,16 @@ public final class ColorUtil
 	{
 		return (colorHex & 0xFFFFFF00) | (insertBlue);
 	}
+	
+	/**
+	 * 将颜色值转换html格式的颜色 toHTML(0xff0000) //#FF0000
+	 * @param	color	颜色值
+	 * @return	html形式的颜色值
+	 */
+	public static function toHTML(color:uint):String
+	{
+		return "#" + (color.toString(16)).toUpperCase();
+	}
+	
 }
 }
