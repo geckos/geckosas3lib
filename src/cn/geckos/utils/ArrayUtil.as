@@ -128,10 +128,9 @@ public final class ArrayUtil
 	}
 	
 	/**
-	 * 
+	 * 返回一个"唯一性"数组
 	 * @param	ary
 	 * @return
-	 * 返回一个"唯一性"数组
 	 * 比如: [1, 2, 2, 3, 4]
 	 * 返回: [1, 2, 3, 4]
 	 */
@@ -148,16 +147,16 @@ public final class ArrayUtil
 		return newAry;
 	}
 	
-	
 	/**
-	* 
-	* 返回2个数组中不同的部分
-	* 比如数组A = [1, 2, 3, 4, 6]
-	*     数组B = [0, 2, 1, 3, 4]
-	* 
-	* 返回[6, 0]
-	*/
-	public static function getDifferAry (aryA:Array, aryB:Array):Array
+	 * 返回2个数组中不同的部分
+	 * 比如数组A = [1, 2, 3, 4, 6]
+	 *     数组B = [0, 2, 1, 3, 4]
+	 * 返回[6, 0]
+	 * @param	aryA
+	 * @param	aryB
+	 * @return
+	 */
+	public static function getDifferAry(aryA:Array, aryB:Array):Array
 	{
 		aryA = getUniqueAry(aryA);
 		aryB = getUniqueAry(aryB);
@@ -191,14 +190,11 @@ public final class ArrayUtil
 		return newAry;
 	}
 
-	
-	
 	/**
-	 * 
+	 * 初始化指定长度的数组, 用初始值填充数组
 	 * @param	itemNum  数组长度
 	 * @param	value    数组值
 	 * @return
-	 * 初始化指定长度的数组, 用初始值填充数组
 	 */
 	public static function initialize(itemNum:uint, value:Object):Array
 	{
@@ -208,6 +204,12 @@ public final class ArrayUtil
 		return newArr;
 	}
 	
+	/**
+	 * 交换数组中的2个位置
+	 * @param	array	需要交换的数组
+	 * @param	index1	索引1
+	 * @param	index2	索引2
+	 */
     public static function swap(array:Array, index1:uint, index2:uint):void
     {
         var temp:* = array[index1];
@@ -237,15 +239,47 @@ public final class ArrayUtil
 	public static function cloneList(ary:Array):Array
 	{
 		if (!ary) return null
-		var length:int = ary.length;
-		var list:Array = [];
-		for (var i:int = 0; i < length; i++) 
-		{
-			list.push(ary[i]);
-		}
-		return list;
+		return ary.slice();
 	}
 	
+	/**
+	 * 判断2个数组是否相同
+	 * @param	ary1	数组1
+	 * @param	ary2	数组2
+	 * @return	是否相同
+	 */
+	public static function equals(ary1:Array, ary2:Array):Boolean
+	{
+		if (ary1 == ary2) return true;
+		var length:int = ary1.length;
+		if (length != ary2.length) return false;
+		while (length--)
+		{
+			if (ary1[length] != ary2[length])
+				return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * 获取列表中最小值
+	 * @param	ary	列表
+	 * @return	最小值
+	 */
+	public function getLowestValue(ary:Array):Number
+	{
+		return ary[ary.sort(16 | 8)[0]];
+	}
+	
+	/**
+	 * 获取列表中最大值
+	 * @param	ary	列表
+	 * @return	最大值
+	 */
+	public function getHighestValue(ary:Array):Number
+	{
+		return ary[ary.sort(16 | 8)[ary.length - 1]];
+	}
 }
 }
 
