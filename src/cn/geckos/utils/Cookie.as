@@ -34,7 +34,7 @@ public class Cookie
 	 * 保存数据
 	 * @param	key		存储键值
 	 * @param	value	需要存储的值
-     * @param   expireDatetime  过期日期时间的毫秒数，Date.time
+     * @param   expireDatetime  过期日期时间的时间戳，单位为毫秒，Date.time
 	 */
 	public static function save(key:String, value:String, expireDatetime:Number=0):void
 	{
