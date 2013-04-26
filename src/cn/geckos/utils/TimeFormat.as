@@ -10,12 +10,12 @@ public final class TimeFormat
      * 秒数转换为时间形式。
      * @param	time 秒数    
      * @param	partition 分隔符
-     * @param	position  时间显示的位置
+     * @param	showHour  是否显示小时
      * @return  返回一个以分隔符分割的时, 分, 秒
      * 
      * 比如: time = 4351; secondToTime(time)返回字符串01:12:31;
      */
-    public static function secondToTime(time:Number = 0, partition:String = ":", position:int = 1):String
+    public static function secondToTime(time:Number = 0, partition:String = ":", showHour:Boolean = true):String
     {
         var hours:int = time / 3600;
         var minutes:int = time % 3600 / 60;
@@ -29,17 +29,12 @@ public final class TimeFormat
         if (minutes < 10) m = "0" + m;
         if (seconds < 10) s = "0" + s;
 		
-		var timeStr:String = "";
-		var ary:Array = [h, m, s];
-		var length:int = ary.length;
-		if (position > length) position = length;
-		if (position < 1) position = 1;
-		for (var i:int = position - 1; i < length; i += 1) 
-		{
-			timeStr += ary[i];
-			if (i < length - 1) 
-				timeStr += partition;
-		}
+		var timeStr:String;
+		if (showHour)
+			timeStr = h + partition + m + partition + s;
+		else
+			timeStr = m + partition + s;
+		
         return  timeStr;
     }
     
