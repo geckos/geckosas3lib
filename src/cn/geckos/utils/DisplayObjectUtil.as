@@ -4,8 +4,10 @@ import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
+import flash.display.Graphics;
 import flash.display.Loader;
 import flash.display.MovieClip;
+import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
@@ -198,5 +200,199 @@ public class DisplayObjectUtil
 		bitmapData.draw(d, mtx);
 		return bitmapData;
 	}
+	
+	
+	/**
+	 * @param	container   一个指定容器（Sprite 或者 Movieclip)
+	 * @param	scale9Grids 设定的9slice 矩形对象
+	 * @example 
+	 *	var r:Rectangle = new Rectangle(23, 21, 44, 47);//9slice 尺寸
+         *	convertBitmaptoScale9(_mc, r);//清除原始Bitmap信息，转而在该mc的graphics中绘制
+	 * 需要注意的是该方法没有返回container中的位图的bitmapData对象, 如果这个bitmapData对象调用dispose
+	 * 被销毁, 那么依靠beginBitmapFill进行绘图的显示对象中的图形会被清除
+	 */
+	public static function convertBitmaptoScale9(container:DisplayObjectContainer, scale9Grids:Rectangle):void{
+		var b:Bitmap = container.removeChildAt(0) as Bitmap; //获取到的是Bitmap而不是Shape,就是因为在库中取了链接名
+		var topDown:Array = [scale9Grids.top, scale9Grids.bottom, b.height];
+		var leftRight:Array = [scale9Grids.left, scale9Grids.right, b.width];
+		var g:Graphics = Sprite(container).graphics;
+		var bd:BitmapData = b.bitmapData.clone();
+		var topDownStepper:int = 0;
+		var leftRightStepper:int = 0;
+		for(var i:int = 0; i < 3; i ++){
+			for(var j:int = 0; j < 3; j ++){
+				g.beginBitmapFill(bd, null, true, true);
+				g.drawRect(leftRightStepper, topDownStepper,
+					leftRight[i] - leftRightStepper, topDown[j] - topDownStepper);
+				g.endFill();
+				topDownStepper = topDown[j];
+			}
+			leftRightStepper = leftRight[i];
+			topDownStepper = 0;
+		}
+		container.scale9Grid = scale9Grids;
+		b.bitmapData.dispose();
+		b.bitmapData = null;
+	}
+	
+	/**
+	 * 根据给定的显示对象获取实际显示的长宽
+	 * @param dis
+	 * @return 
+	 * @example
+	 * 绘制一个shape盖在_mc上, 这个shape的覆盖区域就是_mc的不透明矩形区域
+	 *  var r:Rectangle = getDisplaySize(_mc);
+	 *	var s:Shape = new Shape();
+	 *	addChild(s);
+	 *	s.graphics.beginFill(0, .4);
+	 *	s.graphics.drawRect(r.x, r.y, r.width, r.height);
+	 *	s.graphics.endFill();
+	 *	s.x = _mc.x;
+	 *	s.y = _mc.y;
+	 */
+	public static function getDisplaySize(dis:DisplayObject):Rectangle{
+		var b:Rectangle = dis.getBounds(dis);
+		var t:Matrix = dis.transform.matrix;
+		var d:BitmapData = new BitmapData(b.width * t.a, b.height * t.d, true, 0);
+		d.draw(dis, new Matrix(t.a, 0, 0, t.d, -b.x * t.a, -b.y * t.d));
+		var r:Rectangle = d.getColorBoundsRect(0xFF000000, 0, false);
+		d.dispose();
+		r.x += b.x * t.a;
+		r.y += b.y * t.d;
+		return r;
+	}
+	
+	/**
+	 * @param dis 指定显示对象
+	 * 设置了scrollRect, 又或者移除舞台，而后添加至舞台, 会导致可视长宽无法及时获得, 
+	 * 需要延迟一帧才能获得 (移除舞台到添加至舞台, 添加至舞台到移除舞台，具体表现还不一致)
+	 * 似乎也可以使用draw绘制当前可视范围, 但也需要注意当前显示对象如果为loader,可能会
+	 * 导致安全报错
+	 * getBounds 只对设置过的scrollRect 起作用, 对内部visible为false始终保持原始的该区域的值
+	 */ 
+	public static function invalidateRedraw(dis:DisplayObject):void{
+		var area:Rectangle = dis.scrollRect;
+		dis.scrollRect = null;
+		__redraw(dis);
+		dis.scrollRect = area;
+		__redraw(dis);
+	}
+	
+	/**
+	 * 检查指定显示对象在指点鼠标点下是否为透明
+	 * @param dis   指定显示对象
+	 * @param point 指定鼠标点Point对象, 为舞台全局坐标         
+	 */ 
+	public static function checkPointIsTransParent(dis:DisplayObject, point:Point):Boolean{
+		if(!dis){
+			return true;
+		}
+		checkTransParent.fillRect(checkTransParent.rect, 0);
+		checkPoint.x = point.x;
+		checkPoint.y = point.y;
+		checkPoint = dis.globalToLocal(checkPoint);
+		checkMatrix.tx = -checkPoint.x|0;
+		checkMatrix.ty = -checkPoint.y|0;
+		checkTransParent.draw(dis, checkMatrix);
+		return ((checkTransParent.getPixel32(0, 0) >>> 24) & 0xFF) < 0x80;
+	}
+	
+	/**
+	 * 将以下三种类型变量常量提出, 是为了避免每帧创建所带来的内存浪费
+	 */ 
+	private static const checkTransParent:BitmapData = new BitmapData(1, 1, true, 0);
+	private static const checkMatrix:Matrix = new Matrix();
+	private static var checkPoint:Point = new Point();
+	
+	
+	
+	/**
+	 * 检查指定显示对象是否在舞台上, 可以使用Stage属性是否为空为判断条件, 还有个方法是检测显示对象的loaderInfo属性是否为空
+	 * 但是当一个loader加载了一个显示对象后, 就不要去检测被加载对象它的LoaderInfo属性, 
+	 * 即使该loader对象不在舞台, 它的loaderInfo属性也不为空
+	 * @param dis
+	 * @return
+	 */
+	public static function isOnStage(dis:DisplayObject):Boolean {
+		if(dis && dis.stage && dis.visible){
+			var main:Rectangle = new Rectangle(0, 0, dis.stage.stageWidth, dis.stage.stageHeight);
+			var p:Point = dis.parent.localToGlobal(new Point(dis.x, dis.y));
+			return main.containsPoint(p);
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * 获取指定显示对象的位图数据对象
+	 * @param dis
+	 * @param sx
+	 * @param sy
+	 * @see getBitmapData (这里将ColorTransform, filters 计算在内) 
+	 * @return 
+	 */
+	public static function getCopy(dis:DisplayObject, sx:Number = 1.0, sy:Number = 1.0):BitmapData{
+		if(dis.width <= 0 || dis.height <= 0){
+			return null;
+		}
+		if(!__checkDraw(dis)){
+			return null;
+		}
+		var wh:Rectangle = getActualSize(dis);
+		var c:ColorTransform = dis.transform.colorTransform;
+		var len:int = dis.filters.length;
+		var p:Point = getLeftTopPosition(dis, sx, sy);
+		var b:Rectangle = new Rectangle(0, 0, wh.width, wh.height);
+		if(len > 0){
+			for(var i:int = 0; i < len; i ++){
+				var temp:BitmapData = new BitmapData(wh.width, wh.height, true, 0);
+				var tempRect:Rectangle = temp.generateFilterRect(temp.rect, dis.filters[i]);
+				b = b.union(tempRect);
+				temp.dispose();
+			}
+		}
+		var mt:Matrix = new Matrix(sx, 0, 0, sy, -b.x + p.x, -b.y + p.y);
+		var dt:BitmapData = new BitmapData(b.width, b.height, true, 0);
+		dt.draw(dis, mt, c);
+		return dt;
+	}
+	
+	
+	/**
+	 * 将指定显示对象绘制成一个指定长宽的位图数据对象
+	 * @param dis
+	 * @param range
+	 * @return 
+	 */
+	public static function sampling(dis:DisplayObject, range:Rectangle = null):BitmapData{
+		if((dis.width == 0) || (dis.height == 0)){
+			return null;
+		}
+		if(!__checkDraw(dis)){
+			return null;
+		}
+		if(!range || ((range.width >= dis.width) && (range.height >= dis.height))){
+			return DisplayObjectUtil.getBitmapData(dis);
+		}
+		//var rect:Rectangle = dis.transform.pixelBounds;
+		var rect:Rectangle = dis.getBounds(dis);
+		var s:Number;
+		if(range.width < dis.width){
+			dis.width = range.width;
+			dis.height = range.width * (rect.height / rect.width);
+			s = range.width / rect.width;
+		}
+		if(range.height < dis.height){
+			dis.height = range.height;
+			dis.width = range.height * (rect.width / rect.height);
+			s = range.height / rect.height;
+		}
+		var bd:BitmapData = new BitmapData(dis.width, dis.height, true, 0);
+		var topLeft:Point = DisplayObjectUtil.getLeftTopPosition(dis);
+		bd.draw(dis, new Matrix(s, 0, 0, s, topLeft.x, topLeft.y));
+		return bd;
+	}
+	
+	
 }
 }
