@@ -86,6 +86,16 @@ public class EnterFrame
 	}
 	
 	/**
+	 * 查找存放的方法的索引	如果不存在则返回-1。
+	 * @param	fun		查找的方法
+	 * @return	索引
+	 */
+	public static function indexOf(fun:Function):int
+	{
+		return EnterFrame.funList.indexOf(fun);
+	}
+	
+	/**
 	 * 销毁enterFrame
 	 */
 	public static function destroy():void
