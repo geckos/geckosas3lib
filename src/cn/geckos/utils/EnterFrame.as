@@ -34,11 +34,9 @@ public class EnterFrame
 	private static function timerHandler(event:TimerEvent):void 
 	{
 		var length:int = EnterFrame.funList.length;
-		var fun:Function;
 		for (var i:int = 0; i < length; i += 1) 
 		{
-			fun = EnterFrame.funList[i];
-			fun.apply();
+			EnterFrame.funList[i]();
 		}
 	}
 	
