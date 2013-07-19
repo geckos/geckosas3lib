@@ -205,10 +205,10 @@ public final class ArrayUtil
 	}
 	
 	/**
-	 * 交换数组中的2个位置
-	 * @param	array	需要交换的数组
-	 * @param	index1	索引1
-	 * @param	index2	索引2
+	 * 交换数组元素
+	 * @param	array	目标数组
+	 * @param	index1	交换后的索引
+	 * @param	index2	交换前的索引
 	 */
     public static function swap(array:Array, index1:uint, index2:uint):void
     {
