@@ -3,10 +3,9 @@
 public final class StringUtil
 {
     /**
-     * 
-     * @param    str
-     * @return
      * 根据给定unicode字符返回对应的字符串
+     * @param   str	指定的一个字符串
+     * @return	对应的字符串
      */
     public static function showUnicodeStr(str:String):String
     {
@@ -14,9 +13,9 @@ public final class StringUtil
     }
     
     /**
-     * @param    str
+	 * 匹配中文字符
+     * @param    str	需要匹配的字符串
      * @return
-     * 匹配中文字符
      */
     public static function matchChineseWord(str:String):Array
     {
@@ -26,10 +25,9 @@ public final class StringUtil
     }
     
     /**
-     * 
-     * @param    target
-     * @return
      * 去除字符串左端的空白字符
+     * @param    target		目标字符串
+     * @return
      */
     public static function lTrim(target:String):String
     {
@@ -42,10 +40,9 @@ public final class StringUtil
     }
     
     /**
-     * 
-     * @param    target
-     * @return
      * 去除字符串右端的空白字符
+     * @param    target		目标字符串
+     * @return
      */
     public static function rTrim(target:String):String
     {
@@ -177,9 +174,8 @@ public final class StringUtil
     
     /**
      * 用html实体换掉字符窜中的特殊字符
-     * @param str
-     * @return 
-     * 
+     * @param 	str		需要替换的字符串
+     * @return 	换掉特殊字符后的字符串
      */
     public static function htmlSpecialChars(str:String):String
     {
@@ -316,13 +312,9 @@ public final class StringUtil
         for each (var attr:String in attrs)
         {
             if (o.hasOwnProperty(attr))
-            {
                 o = o[attr];
-            }
             else
-            {
                 return null;
-            }
         }
         
         return o;
@@ -438,5 +430,3 @@ public final class StringUtil
 	}
 }
 }
-
-
