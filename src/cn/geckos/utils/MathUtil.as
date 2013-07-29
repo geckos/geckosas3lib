@@ -64,23 +64,23 @@ public class MathUtil
 	}
 	
 	/**
-     *
-     */ 
+	 * 修正半角
+	 * @param	angle	需要修正的角度
+	 * @return	修正半角后的角度
+	 */
     public static function fixHalfAngle(angle:Number):Number
     {
         angle %= 180;
-        
         if (angle < 0)
-        {
             return angle + 180;
-        }
-        
         return angle;
     }
 	
 	/**
-    * 求取阶乘
-    */
+	 * 求取阶乘
+	 * @param	num		需要求阶乘的数组
+	 * @return	
+	 */
     public static function getFactorial(num:uint):uint
     {
         if(num == 0) return 1;
@@ -164,10 +164,10 @@ public class MathUtil
 	}
 	
 	/**
-	 * 
+	 * 得到num除以divided后得到的余数
 	 * @param	num
 	 * @param	divided
-	 * @return  得到num除以divided后得到的余数
+	 * @return  
 	 */
 	public static function isEvenByDivided(num:Number, divided:Number):Number
 	{

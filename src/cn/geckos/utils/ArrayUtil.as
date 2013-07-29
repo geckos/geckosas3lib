@@ -9,10 +9,8 @@ package cn.geckos.utils
 public final class ArrayUtil
 {
 	/**
-	 * 
-	 * @param	ary
-	 * @return
 	 * 执行冒泡排序
+	 * @param	ary
 	 * 算法参考 -- http://www.hiahia.org/datastructure/paixu/paixu8.3.1.1-1.htm
 	 */
 	public static function bubbleSort (ary:Array):void
@@ -56,8 +54,8 @@ public final class ArrayUtil
 
 	/**
 	 * 执行二分搜索
-	 * @param	ary
-	 * @param	value
+	 * @param	ary		搜索的数组
+	 * @param	value	需要搜索的值
 	 * @return  返回匹配结果的数组索引
 	 */
 	public static function binarySearch(ary:Array, value:Number):Number
@@ -129,8 +127,8 @@ public final class ArrayUtil
 	
 	/**
 	 * 返回一个"唯一性"数组
-	 * @param	ary
-	 * @return
+	 * @param	ary		需要唯一性的数组
+	 * @return	唯一性的数组
 	 * 比如: [1, 2, 2, 3, 4]
 	 * 返回: [1, 2, 3, 4]
 	 */
@@ -140,9 +138,9 @@ public final class ArrayUtil
 		var newAry:Array = new Array();
 		for(var j:int = 0; j<ary.length; j++)
 		{
-			if(!uObj[ary[j]]) uObj[ary[j]] = ary[j];
+			if (!uObj[ary[j]]) uObj[ary[j]] = ary[j];
 		}
-		for(var i:String in uObj)
+		for (var i:String in uObj)
 			newAry.unshift(uObj[i]);
 		return newAry;
 	}
