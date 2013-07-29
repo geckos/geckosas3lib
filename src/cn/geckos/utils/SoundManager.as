@@ -1,6 +1,7 @@
 package cn.geckos.utils 
 {
 import flash.events.Event;
+import flash.events.EventDispatcher;
 import flash.media.Sound;
 import flash.media.SoundChannel;
 import flash.media.SoundTransform;
@@ -9,43 +10,40 @@ import flash.utils.getDefinitionByName;
  * ...声音管理
  * @author Kanon
  */
-public class SoundManager
+public class SoundManager extends EventDispatcher
 {
 	//声音对象
-	private static var sound:Sound;
+	private var sound:Sound;
 	//声音通道对象
-	private static var channel:SoundChannel;
+	private var channel:SoundChannel;
 	//声音控制
-	private static var soundTf:SoundTransform;
+	private var soundTf:SoundTransform;
 	//声音开关
-	private static var soundSwitch:Boolean;
+	private var soundSwitch:Boolean;
 	//播放的位置
-	private static var soundPosition:Number;
+	private var soundPosition:Number;
 	//循环次数
-	private static var soundLoops:uint;
-	//播放结束方法
-	public static var completeFun:Function;
+	private var soundLoops:uint;
 	/**
 	 * 创建声音对象
 	 * @param	soundName	声音对象名字
 	 */
-	public static function createSound(soundName:String):void
+	public function createSound(soundName:String):void
 	{
-		SoundManager.stop();
+		this.stop();
 		var SoundClass:Class = getDefinitionByName(soundName) as Class;
-		sound = new SoundClass();
-		soundTf = new SoundTransform();
+		this.sound = new SoundClass();
+		this.soundTf = new SoundTransform();
 	}
 	
-	private static function soundCompleteHandler(event:Event):void 
+	private function soundCompleteHandler(event:Event):void 
 	{
-		if (soundLoops > 0)
+		if (this.soundLoops > 0)
 		{
-			SoundManager.play(0, soundLoops);
-			soundLoops--;
+			this.play(0, this.soundLoops);
+			this.soundLoops--;
 		}
-		if (completeFun is Function)
-			completeFun();
+		this.dispatchEvent(event);
 	}
 	
 	/**
@@ -53,46 +51,46 @@ public class SoundManager
 	 * @param	startTime	声音的开始时间
 	 * @param	loops		循环次数
 	 */
-	public static function play(startTime:Number = 0, loops:uint = 0):void
+	public function play(startTime:Number = 0, loops:uint = 0):void
 	{
-		if (!sound) return;
-		channel = sound.play(startTime, 0);
-		channel.soundTransform = soundTf;
-		if (!channel.hasEventListener(Event.SOUND_COMPLETE))
-			channel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
-		soundSwitch = true;
-		soundLoops = loops;
+		if (!this.sound) return;
+		this.channel = this.sound.play(startTime, 0);
+		this.channel.soundTransform = this.soundTf;
+		if (!this.channel.hasEventListener(Event.SOUND_COMPLETE))
+			this.channel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
+		this.soundSwitch = true;
+		this.soundLoops = loops;
 	}
 	
 	/**
 	 * 停止声音
 	 */
-	public static function stop():void
+	public function stop():void
 	{
-		if (!channel) return;
-		soundPosition = channel.position;
-		channel.stop();
-		soundSwitch = false;
+		if (!this.channel) return;
+		this.soundPosition = this.channel.position;
+		this.channel.stop();
+		this.soundSwitch = false;
 	}
 	
 	/**
 	 * 暂停或恢复
 	 */
-	public static function togglePause():void
+	public function togglePause():void
 	{
-		soundSwitch = !soundSwitch;
-		if (!soundSwitch) stop();
-		else play(soundPosition, soundLoops);
+		this.soundSwitch = !this.soundSwitch;
+		if (!this.soundSwitch) stop();
+		else this.play(this.soundPosition, this.soundLoops);
 	}
 	
 	/**
 	 * 设置音量
 	 * @param	value
 	 */
-	public static function setVolume(value:Number):void
+	public function setVolume(value:Number):void
 	{
-		if (!soundTf) return;
-		soundTf.volume = value;
+		if (!this.soundTf) return;
+		this.soundTf.volume = value;
 	}
 }
 }
