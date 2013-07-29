@@ -3,6 +3,7 @@ package cn.geckos.utils
 import flash.events.Event;
 import flash.media.Sound;
 import flash.media.SoundChannel;
+import flash.media.SoundTransform;
 import flash.utils.getDefinitionByName;
 /**
  * ...声音管理
@@ -14,6 +15,8 @@ public class SoundManager
 	private static var sound:Sound;
 	//声音通道对象
 	private static var channel:SoundChannel;
+	//声音控制
+	private static var soundTf:SoundTransform;
 	//声音开关
 	private static var soundSwitch:Boolean;
 	//播放的位置
@@ -31,6 +34,7 @@ public class SoundManager
 		SoundManager.stop();
 		var SoundClass:Class = getDefinitionByName(soundName) as Class;
 		sound = new SoundClass();
+		soundTf = new SoundTransform();
 	}
 	
 	private static function soundCompleteHandler(event:Event):void 
@@ -53,6 +57,7 @@ public class SoundManager
 	{
 		if (!sound) return;
 		channel = sound.play(startTime, 0);
+		channel.soundTransform = soundTf;
 		if (!channel.hasEventListener(Event.SOUND_COMPLETE))
 			channel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
 		soundSwitch = true;
@@ -80,5 +85,14 @@ public class SoundManager
 		else play(soundPosition, soundLoops);
 	}
 	
+	/**
+	 * 设置音量
+	 * @param	value
+	 */
+	public static function setVolume(value:Number):void
+	{
+		if (!soundTf) return;
+		soundTf.volume = value;
+	}
 }
 }
