@@ -37,7 +37,6 @@ public class SoundManager extends EventDispatcher
 	{
 		this.stop();
 		this.removeEventListeners();
-		this.setVolume(1);
 		var SoundClass:Class = getDefinitionByName(soundName) as Class;
 		this.sound = new SoundClass();
 		if (!this.soundTf) 
@@ -87,7 +86,7 @@ public class SoundManager extends EventDispatcher
 	public function togglePause():void
 	{
 		this.soundSwitch = !this.soundSwitch;
-		if (!this.soundSwitch) stop();
+		if (!this.soundSwitch) this.stop();
 		else this.play(this.soundPosition, this.soundLoops);
 	}
 	
@@ -109,11 +108,9 @@ public class SoundManager extends EventDispatcher
 	{
 		this.stop();
 		this.removeEventListeners();
-		this.setVolume(1);
+		this.sound = new Sound();
 		if (!this.req) this.req = new URLRequest(url);
 		else this.req.url = url;
-		
-		this.sound = new Sound();
 		if (!this.soundTf) this.soundTf = new SoundTransform();
 		
 		if (!this.sound.hasEventListener(IOErrorEvent.IO_ERROR))
@@ -173,6 +170,8 @@ public class SoundManager extends EventDispatcher
 		this.removeEventListeners();
 		this.channel = null;
 		this.soundTf = null;
+		this.req = null;
+		this.sound = null;
 	}
 }
 }
