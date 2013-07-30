@@ -36,7 +36,7 @@ public class SoundManager extends EventDispatcher
 	public function createSound(soundName:String):void
 	{
 		this.stop();
-		this.removeEventListeners();
+		this.removeLoadEventListeners();
 		var SoundClass:Class = getDefinitionByName(soundName) as Class;
 		this.sound = new SoundClass();
 		if (!this.soundTf) 
@@ -108,6 +108,7 @@ public class SoundManager extends EventDispatcher
 	{
 		this.stop();
 		this.removeEventListeners();
+		//Sound对象只允许被load一个声音流,即使close()了也不能加载另一个声音.
 		this.sound = new Sound();
 		if (!this.req) this.req = new URLRequest(url);
 		else this.req.url = url;
@@ -145,6 +146,16 @@ public class SoundManager extends EventDispatcher
 	 */
 	private function removeEventListeners():void
 	{
+		if (this.channel && 
+			this.channel.hasEventListener(Event.SOUND_COMPLETE))
+			this.channel.removeEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
+	}
+	
+	/**
+	 * 销毁加载用的事件
+	 */
+	private function removeLoadEventListeners():void
+	{
 		if (this.sound)
 		{
 			if (this.sound.hasEventListener(IOErrorEvent.IO_ERROR))
@@ -156,9 +167,6 @@ public class SoundManager extends EventDispatcher
 			if (this.sound.hasEventListener(Event.COMPLETE))
 				this.sound.removeEventListener(Event.COMPLETE, loadCompleteHandler);
 		}
-		if (this.channel && 
-			this.channel.hasEventListener(Event.SOUND_COMPLETE))
-			this.channel.removeEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
 	}
 	
 	/**
@@ -168,6 +176,7 @@ public class SoundManager extends EventDispatcher
 	{
 		this.stop();
 		this.removeEventListeners();
+		this.removeLoadEventListeners();
 		this.channel = null;
 		this.soundTf = null;
 		this.req = null;
