@@ -2,9 +2,12 @@ package cn.geckos.utils
 {
 import flash.events.Event;
 import flash.events.EventDispatcher;
+import flash.events.IOErrorEvent;
+import flash.events.ProgressEvent;
 import flash.media.Sound;
 import flash.media.SoundChannel;
 import flash.media.SoundTransform;
+import flash.net.URLRequest;
 import flash.utils.getDefinitionByName;
 /**
  * ...声音管理
@@ -24,6 +27,8 @@ public class SoundManager extends EventDispatcher
 	private var soundPosition:Number;
 	//循环次数
 	private var soundLoops:uint;
+	//请求地址
+	private var req:URLRequest;
 	/**
 	 * 创建声音对象
 	 * @param	soundName	声音对象名字
@@ -31,9 +36,12 @@ public class SoundManager extends EventDispatcher
 	public function createSound(soundName:String):void
 	{
 		this.stop();
+		this.removeEventListeners();
+		this.setVolume(1);
 		var SoundClass:Class = getDefinitionByName(soundName) as Class;
 		this.sound = new SoundClass();
-		this.soundTf = new SoundTransform();
+		if (!this.soundTf) 
+			this.soundTf = new SoundTransform();
 	}
 	
 	private function soundCompleteHandler(event:Event):void 
@@ -91,6 +99,80 @@ public class SoundManager extends EventDispatcher
 	{
 		if (!this.soundTf) return;
 		this.soundTf.volume = value;
+	}
+	
+	/**
+	 * 加载声音
+	 * @param	url	声音地址
+	 */
+	public function loadSound(url:String):void
+	{
+		this.stop();
+		this.removeEventListeners();
+		this.setVolume(1);
+		if (!this.req) this.req = new URLRequest(url);
+		else this.req.url = url;
+		
+		this.sound = new Sound();
+		if (!this.soundTf) this.soundTf = new SoundTransform();
+		
+		if (!this.sound.hasEventListener(IOErrorEvent.IO_ERROR))
+			this.sound.addEventListener(IOErrorEvent.IO_ERROR, loadErrorHandler);
+		
+		if (!this.sound.hasEventListener(ProgressEvent.PROGRESS))
+			this.sound.addEventListener(ProgressEvent.PROGRESS, loadProgressHandler);
+		
+		if (!this.sound.hasEventListener(Event.COMPLETE))
+			this.sound.addEventListener(Event.COMPLETE, loadCompleteHandler);
+		
+		this.sound.load(this.req);
+	}
+	
+	private function loadCompleteHandler(event:Event):void 
+	{
+		this.dispatchEvent(event);
+	}
+	
+	private function loadErrorHandler(event:IOErrorEvent):void 
+	{
+		this.dispatchEvent(event);
+	}
+	
+	private function loadProgressHandler(event:ProgressEvent):void 
+	{
+		this.dispatchEvent(event);
+	}
+	
+	/**
+	 * 销毁时间监听
+	 */
+	private function removeEventListeners():void
+	{
+		if (this.sound)
+		{
+			if (this.sound.hasEventListener(IOErrorEvent.IO_ERROR))
+				this.sound.removeEventListener(IOErrorEvent.IO_ERROR, loadErrorHandler);
+			
+			if (this.sound.hasEventListener(ProgressEvent.PROGRESS))
+				this.sound.removeEventListener(ProgressEvent.PROGRESS, loadProgressHandler);
+				
+			if (this.sound.hasEventListener(Event.COMPLETE))
+				this.sound.removeEventListener(Event.COMPLETE, loadCompleteHandler);
+		}
+		if (this.channel && 
+			this.channel.hasEventListener(Event.SOUND_COMPLETE))
+			this.channel.removeEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
+	}
+	
+	/**
+	 * 销毁方法
+	 */
+	public function destroy():void
+	{
+		this.stop();
+		this.removeEventListeners();
+		this.channel = null;
+		this.soundTf = null;
 	}
 }
 }
