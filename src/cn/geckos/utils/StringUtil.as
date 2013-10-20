@@ -436,7 +436,7 @@ public final class StringUtil
 	 * @param	start	需要截断的起始索引
 	 * @param	len		截断长度
 	 * @param	order	顺序，true从字符串头部开始计算，false从字符串尾巴开始结算。
-	 * @return	
+	 * @return	截断后的字符串
 	 */
 	public static function cutOff(str:String, start:int, 
 								  len:int, order:Boolean=true):String
