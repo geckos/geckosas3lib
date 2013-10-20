@@ -1,5 +1,6 @@
 ﻿package cn.geckos.utils
 {
+	import flash.utils.ByteArray;
 public final class StringUtil
 {
     /**
@@ -428,5 +429,35 @@ public final class StringUtil
         }
         return len;
 	}
+	
+	/**
+	 * 截断某段字符串
+	 * @param	str		目标字符串
+	 * @param	start	需要截断的起始索引
+	 * @param	len		截断长度
+	 * @param	order	顺序，true从字符串头部开始计算，false从字符串尾巴开始结算。
+	 * @return	
+	 */
+	public static function cutOff(str:String, start:int, 
+								  len:int, order:Boolean=true):String
+	{
+		var length:int = str.length;
+		if (start > length) start = length;
+		var s:int = start;
+		var e:int = start + len;
+		var newStr:String;
+		if (order)
+		{
+			newStr = str.substring(0, s) + str.substr(e, length);
+		}
+		else 
+		{
+			s = length - 1 - start - len;
+			e = s + len;
+			newStr = str.substring(0, s + 1) + str.substr(e + 1 , length);
+		}
+		return newStr;
+	}
+	
 }
 }
