@@ -12,7 +12,7 @@ public class MathUtil
      */ 
     public static function rds2dgs(radians:Number):Number
     {
-        return fixAngle(radians * 180/Math.PI);
+        return fixAngle(radians * 180 / Math.PI);
     }
 
     /**
@@ -23,7 +23,7 @@ public class MathUtil
      */ 
     public static function dgs2rds(degrees:Number):Number
     {
-        return degrees * Math.PI/180;
+        return degrees * Math.PI / 180;
     }
     
     /**
@@ -39,12 +39,7 @@ public class MathUtil
     public static function fixAngle(angle:Number):Number
     {
         angle %= 360;
-        
-        if (angle < 0)
-        {
-            return angle + 360;
-        }
-        
+        if (angle < 0) return angle + 360;
         return angle;
     }
 	
@@ -176,10 +171,10 @@ public class MathUtil
 	
 	/**
 	 * 斜率公式
-	 * @param	x1 坐标点
-	 * @param	y1 
-	 * @param	x2
-	 * @param	y2
+	 * @param	x1 坐标点1x坐标
+	 * @param	y1 坐标点1y坐标
+	 * @param	x2 坐标点2x坐标
+	 * @param	y2 坐标点2y坐标
 	 * @return  相应的斜率
 	 */
 	public static function getSlope(x1:Number, y1:Number, x2:Number, y2:Number):Number
@@ -189,17 +184,17 @@ public class MathUtil
 	}
 	
 	/**
-	 * 已知3边求出某边对应的角的角度
+     * 余弦公式
 	 * CosC=(a^2+b^2-c^2)/2ab
 	 * CosB=(a^2+c^2-b^2)/2ac
 	 * CosA=(c^2+b^2-a^2)/2bc 
-	 * 
+     * 已知3边求出某边对应的角的角度
 	 * @param	a 边
 	 * @param	b 边
 	 * @param	c 边
 	 * @return  一个对象包含三个对应的角度
 	 */
-	public static function threeSidesMathAngle(a:Number,b:Number,c:Number):Object
+	public static function threeSidesMathAngle(a:Number, b:Number, c:Number):Object
 	{
 		var cosA:Number = (c * c + b * b - a * a) / (2 * b * c);
 		var A:Number = Math.round(MathUtil.rds2dgs(Math.acos(cosA)));
@@ -212,33 +207,96 @@ public class MathUtil
 		
 		return { "A":A, "B":B, "C":C };
 	}
+    
+    /**
+     * 正弦公式
+     * a/sinA=b/sinB=c/sinC=2R
+     * 已知一个角度以及角度对于的变长 可以求出三角外接圆半径R的2倍
+     * @param	angle               角度
+     * @param	line                角对应的变长
+     * @return  三角外接圆半径R
+     */
+    public static function sineLaw(angle:Number, line:Number):Number
+    {
+        return line / Math.sin(angle) / 2;
+    }
 	
 	/**
 	 * 旋转公式
-	 * @param	dx 旋转物体的x-中心点的x
-	 * @param	dy 旋转物体的y-中心点的y
-	 * @param	sin 根据角度求出sin
-	 * @param	cos 根据角度求出cos
-	 * @param	reverse 顺时针 逆时针
-	 * @return  新的坐标
+	 * @param	x       需要旋转物体的x坐标
+	 * @param	y       需要旋转物体的y坐标
+	 * @param	cx      中心点x坐标
+	 * @param	cy      中心点y坐标
+	 * @param	angle   旋转的弧度
+	 * @param	reverse true顺时针 false逆时针
+	 * @return  旋转后新的坐标
 	 */
-	public static function rotate(dx:Number, dy:Number, sin:Number, cos:Number, reverse:Boolean):Point
+	public static function rotate(x:Number, y:Number, 
+                                  cx:Number, cy:Number, 
+                                  angle:Number, reverse:Boolean = false):Point
 	{
 		var point:Point = new Point();
+        var cos:Number = Math.cos(angle);
+        var sin:Number = Math.sin(angle);
+        var dx:Number = x - cx;
+        var dy:Number = y - cy;
 		if (reverse) 
 		{
-			point.x = dx * cos + dy * sin;
-			point.y = dy * cos - dx * sin;
+			point.x = dx * cos + dy * sin + cx;
+			point.y = dy * cos - dx * sin + cy;
 		}
 		else 
 		{
-			point.x = dx * cos - dy * sin;
-			point.y = dy * cos + dx * sin;
+			point.x = dx * cos - dy * sin + cx;
+			point.y = dy * cos + dx * sin + cy;
 		}
 		return point;
 	}
-	
-	
+    
+    /**
+     * 求出直角坐标系 三角形的重心
+     * @param	a      三角形顶点a
+     * @param	b      三角形顶点b
+     * @param	c      三角形顶点c
+     * @return  三角形的重心
+     */
+    public static function triangleCentroid(a:Point, b:Point, c:Point):Point
+    {
+        return new Point((a.x + b.x + c.x) / 3, (a.y + b.y + c.y) / 3);
+    }
+    
+    /**
+     * 求出直角坐标系 三角形外接圆中心坐标
+     * x = ((y2 - y1) * (y3 * y3 - y1 * y1 + x3 * x3 - x1 * x1) - 
+     *      (y3 - y1) * (y2 * y2 - y1 * y1 + x2 * x2 - x1 * x1)) / 
+     *      (2 * (x3 - x1) * (y2 - y1) - 2 * ((x2 - x1) * (y3 - y1))); 
+     * 
+     * y = ((x2 - x1) * (x3 * x3 - x1 * x1 + y3 * y3 - y1 * y1) - 
+     *      (x3 - x1) * (x2 * x2 - x1 * x1 + y2 * y2 - y1 * y1)) / 
+     *      (2 * (y3 - y1) * (x2 - x1) - 2 * ((y2 - y1) * (x3 - x1)));
+     * @param	a      三角形顶点a
+     * @param	b      三角形顶点b
+     * @param	c      三角形顶点c
+     * @return  外接圆中心坐标
+     */
+    public static function triangleCircumscribedCircleCenter(a:Point, b:Point, c:Point):Point
+    {
+        var axp:Number = Math.pow(a.x, 2);
+        var bxp:Number = Math.pow(b.x, 2);
+        var cxp:Number = Math.pow(c.x, 2);
+        
+        var ayp:Number = Math.pow(a.y, 2);
+        var byp:Number = Math.pow(b.y, 2);
+        var cyp:Number = Math.pow(c.y, 2);
+        
+        var x:Number = ((b.y - a.y) * (cyp - ayp + cxp - axp) - (c.y - a.y) * (byp - ayp + bxp - axp)) / 
+                                            (2 * (c.x - a.x) * (b.y - a.y) - 2 * ((b.x - a.x) * (c.y - a.y)));
+                                            
+        var y:Number = ((b.x - a.x) * (cxp - axp + cyp - ayp) - (c.x - a.x) * (bxp - axp + byp - ayp)) / 
+                                            (2 * (c.y - a.y) * (b.x - a.x) - 2 * ((b.y - a.y) * (c.x - a.x)));
+        return new Point(x, y);
+    }
+    
 	/**
 	 * 根据项数和公差求出等差数列项数所对应的值 
 	 * @param	sn  n项的和
@@ -270,6 +328,5 @@ public class MathUtil
 		var c:int = -sn;
 		return ( -b + Math.sqrt(b * b - (4 * a * c))) / (2 * a);
 	}
-	
 }
 }
