@@ -162,6 +162,9 @@ public final class StringUtil
         return tempStr;
     }
     
+    /**
+     * 特殊符号字符串
+     */
     private static var specialSigns:Array = [
         '&', '&amp;',
         '<', '&lt;',
@@ -174,20 +177,44 @@ public final class StringUtil
     ];
     
     /**
+     * 正则形式的特殊符号
+     */
+    private static var regExpSpecialSigns:Array = [
+        new RegExp(/&/g), new RegExp(/&amp;/g),
+        new RegExp(/</g), new RegExp(/&lt;/g),
+        new RegExp(/>/g), new RegExp(/&gt;/g),
+        new RegExp(/"/g), new RegExp(/&quot;/g),
+        new RegExp(/'/g), new RegExp(/&039;/g),
+        new RegExp(/®/g), new RegExp(/&reg;/g),
+        new RegExp(/©/g), new RegExp(/&copy;/g),
+        new RegExp(/™/g), new RegExp(/&trade;/g),
+    ];
+    
+    /**
      * 用html实体换掉字符窜中的特殊字符
-     * @param 	str		需要替换的字符串
+     * @param 	str		        需要替换的字符串
+     * @param 	reversion		是否翻转替换：将转义符号替换为正常的符号
      * @return 	换掉特殊字符后的字符串
      */
-    public static function htmlSpecialChars(str:String):String
+    public static function htmlSpecialChars(str:String, reversion:Boolean = false):String
     {
-        var len:Number = specialSigns.length;
-        for( var i:Number = 0; i < len; i += 2 )
+        var len:int = specialSigns.length;
+        for (var i:int = 0; i < len; i += 2)
         {
-            var from:String = specialSigns[i];
-            var to:String = specialSigns[i+1];
+            var from:RegExp;
+            var to:String;
+            if (! reversion)
+            {
+                from = regExpSpecialSigns[i];
+                to = specialSigns[i + 1];
+            }
+            else
+            {
+                from = regExpSpecialSigns[i + 1];
+                to = specialSigns[i];
+            }
             str = str.replace(from, to);
         }
-        
         return str;
     }
     
