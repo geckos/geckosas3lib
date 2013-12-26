@@ -278,6 +278,31 @@ public final class ArrayUtil
 	{
 		return ary[ary.sort(16 | 8)[ary.length - 1]];
 	}
+	
+	/**
+     * 根据索引插入元素，索引和索引后的元素都向后移动一位
+     * @param	index   插入索引
+     * @param	value   插入的元素
+     * @return  插入的元素 未插入则返回空
+     */
+    public function insert(ary:Array, index:int, value:*):*
+    {
+        if (!ary) return null;
+        var length:int = ary.length;
+        if (index > length) index = length;
+        if (index < 0) index = 0;
+        if (index == length) ary.push(value); //插入最后
+        else if (index == 0) ary.unshift(value); //插入头
+        else
+        {
+            for (var i:int = length - 1; i >= index; i -= 1) 
+            {
+                ary[i + 1] = ary[i];
+            }
+            ary[index] = value;
+        }
+        return value;
+    }
 }
 }
 
