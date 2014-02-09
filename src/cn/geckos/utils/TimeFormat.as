@@ -39,7 +39,7 @@ public final class TimeFormat
     }
     
     /**
-     * 时间形式转换为秒数。
+     * 时间形式转换为毫秒数。
      * @param   time  以指定分隔符分割的时间字符串
      * @param   partition  分隔符
      * @param   strict  严谨模式（默认开启），如果给定时间格式不符合规范将抛出异常
