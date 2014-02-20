@@ -211,9 +211,9 @@ public class MathUtil
     /**
      * 正弦公式
      * a/sinA=b/sinB=c/sinC=2R
-     * 已知一个角度以及角度对于的变长 可以求出三角外接圆半径R的2倍
-     * @param	angle               角度
-     * @param	line                角对应的变长
+     * 已知一个角度以及角度对应的边长 可以求出三角外接圆半径R的2倍
+     * @param	angle               弧度
+     * @param	line                弧度应的变长
      * @return  三角外接圆半径R
      */
     public static function sineLaw(angle:Number, line:Number):Number
