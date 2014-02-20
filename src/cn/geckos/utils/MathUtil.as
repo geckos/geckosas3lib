@@ -222,24 +222,24 @@ public class MathUtil
     }
 	
 	/**
-	 * 旋转公式
-	 * @param	x       需要旋转物体的x坐标
-	 * @param	y       需要旋转物体的y坐标
-	 * @param	cx      中心点x坐标
-	 * @param	cy      中心点y坐标
-	 * @param	angle   旋转的弧度
-	 * @param	reverse true顺时针 false逆时针
-	 * @return  旋转后新的坐标
+	 * 坐标旋转公式
+	 * @param	cx			中心点x坐标
+	 * @param	cy			中心点y坐标
+	 * @param	x			需要旋转的物体的x坐标
+	 * @param	y			需要旋转的物体的y坐标
+	 * @param	sin			sin(旋转角度);
+	 * @param	cos			cos(旋转角度);
+	 * @param	reverse		是否逆时针旋转
+	 * @return	旋转后坐标
 	 */
-	public static function rotate(x:Number, y:Number, 
-                                  cx:Number, cy:Number, 
-                                  angle:Number, reverse:Boolean = false):Point
+	public static function rotate(cx:Number, cy:Number, 
+								  x:Number, y:Number, 
+								  sin:Number, cos:Number, 
+								  reverse:Boolean):Point
 	{
 		var point:Point = new Point();
-        var cos:Number = Math.cos(angle);
-        var sin:Number = Math.sin(angle);
-        var dx:Number = x - cx;
-        var dy:Number = y - cy;
+		var dx:Number = x - cx;
+		var dy:Number = y - cy;
 		if (reverse) 
 		{
 			point.x = dx * cos + dy * sin + cx;
