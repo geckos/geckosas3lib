@@ -458,5 +458,26 @@ public class MathUtil
 		}
 		return true;
 	}
+	
+	/**
+	 * 判断点是否在任意三角形内部
+	 * @param	a		三角形点a
+	 * @param	b		三角形点b
+	 * @param	c		三角形点c
+	 * @param	p		点
+	 * @return	是否在三角形内部
+	 */
+	public static function isInsideTriangle(a:Point, b:Point, c:Point, p:Point):Boolean
+	{
+		var planeAB:Number = (a.x - p.x) * (b.y - p.y) - (b.x - p.x) * (a.y - p.y);
+		var planeBC:Number = (b.x - p.x) * (c.y - p.y) - (c.x - p.x) * (b.y - p.y);
+		var planeCA:Number = (c.x - p.x) * (a.y - p.y) - (a.x - p.x) * (c.y - p.y);
+		return sign(planeAB) == sign(planeBC) && sign(planeBC) == sign(planeCA);
+	}
+	
+	private static function sign(n:Number):int 
+	{
+		return Math.abs(n) / n;
+	}
 }
 }
