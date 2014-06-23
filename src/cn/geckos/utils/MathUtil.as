@@ -343,123 +343,6 @@ public class MathUtil
 	}
 	
 	/**
-	 * 点是否在一个矩形范围内（矩形可旋转）
-	 * @param	pointsList	必须为顺时针点的数组 此数组暂不判断矩形的合法性,也不判断顶点是否是逆指针
-	 * @param	point		点坐标
-	 * @return	是否在范围内
-	 */
-	public static function pointContainRect(pointsList:Array, point:Point):Boolean
-	{
-		if (!pointsList || !point) return false;
-		if (pointsList.length != 4) return false;
-		//找到最小x，y和最大x，y坐标
-		var length:int = pointsList.length;
-		var p:Point;
-		//最大最小x坐标
-		var minX:Number = Infinity;
-		var maxX:Number = -Infinity;
-		//最大最小y坐标
-		var minY:Number = Infinity;
-		var maxY:Number = -Infinity;
-		//最小x和最大x的索引
-		var minXIndex:int;
-		var maxXIndex:int;
-		//最小y和最大y的索引
-		var minYIndex:int;
-		var maxYIndex:int;
-		for (var i:int = 0; i < length; i += 1) 
-		{
-			p = pointsList[i];
-			if (p.x < minX)
-			{
-				minX = p.x;
-				minXIndex = i;
-			}
-			if (p.x > maxX) 
-			{
-				maxX = p.x;
-				maxXIndex = i;
-			}
-			if (p.y < minY)
-			{
-				minY = p.y;
-				minYIndex = i;
-			}
-			if (p.y > maxY)
-			{
-				maxY = p.y;
-				maxYIndex = i;
-			}
-		}
-		//排除掉外框矩形范围外的可能性
-		if (point.x < minX || point.x > maxX || 
-			point.y < minY || point.y > maxY)
-			return false;
-			
-		//分析4个点的分布位置
-		var leftPot:Point = pointsList[minXIndex];
-		var rightPot:Point = pointsList[maxXIndex];
-		var topPot:Point = pointsList[minYIndex];
-		var downPot:Point = pointsList[maxYIndex];
-		
-		//获取点处于外部4个三角形的哪一个三角形之内
-		//两个三角形斜边的坐标
-		var px:Number;
-		var py:Number;
-		//斜边弧度
-		var radians:Number;
-		if (point.x >= leftPot.x && point.y >= topPot.y && 
-			point.x <= topPot.x && point.y <= leftPot.y)
-		{
-			//处于左和上两点形成的三角形
-			//trace("左和上");
-			radians = Math.atan2(leftPot.y - topPot.y, topPot.x - leftPot.x);
-			//计算左上斜边上的交叉点
-			px = leftPot.x + (leftPot.y - point.y) / Math.tan(radians);
-			py = topPot.y + Math.tan(radians) * (topPot.x - point.x);
-			if (point.x < px || point.y < py) return false;
-		}
-		
-		if (point.x <= rightPot.x && point.y >= topPot.y &&
-			point.x >= topPot.x && point.y <= rightPot.y)
-		{
-			//处于右和上两点形成的三角形
-			//trace("右和上");
-			radians = Math.atan2(rightPot.y - topPot.y, rightPot.x - topPot.x);
-			//计算右上斜边上的交叉点
-			px = rightPot.x - (rightPot.y - point.y) / Math.tan(radians);
-			py = topPot.y + Math.tan(radians) * (point.x - topPot.x);
-			//trace(px, py);
-			if (point.x > px || point.y < py) return false;
-		}
-		
-		if (point.x <= rightPot.x && point.y <= downPot.y && 
-			point.x >= downPot.x && point.y >= rightPot.y)
-		{
-			//处于右和下两点形成的三角形
-			//trace("右和下");
-			radians = Math.atan2(downPot.y - rightPot.y, rightPot.x - downPot.x);
-			//trace(MathUtil.rds2dgs(radians));
-			px = rightPot.x - (point.y - rightPot.y) / Math.tan(radians);
-			py = downPot.y - (point.x - downPot.x) * Math.tan(radians);
-			if (point.x > px || point.y > py) return false;
-		}
-		
-		if (point.x >= leftPot.x && point.y <= downPot.y && 
-			point.x <= downPot.x && point.y >= leftPot.y)
-		{
-			//处于左和下两点形成的三角形
-			//trace("左和下");
-			radians = Math.atan2(downPot.y - leftPot.y, downPot.x - leftPot.x);
-			//trace(MathUtil.rds2dgs(radians));
-			px = leftPot.x + (point.y - leftPot.y) / Math.tan(radians);
-			py = downPot.y - (downPot.x - point.x) * Math.tan(radians);
-			if (point.x < px || point.y > py) return false;
-		}
-		return true;
-	}
-	
-	/**
 	 * 判断点是否在任意三角形内部
 	 * @param	a		三角形点a
 	 * @param	b		三角形点b
@@ -478,6 +361,37 @@ public class MathUtil
 	private static function sign(n:Number):int 
 	{
 		return Math.abs(n) / n;
+	}
+	
+	/**
+	 * 求三角形面积
+	 * @param	a		点a
+	 * @param	b		点b
+	 * @param	c		点c
+	 * @return	面积
+	 */
+	public static function triangleArea(a:Point, b:Point, c:Point):Number
+	{
+		return (c.x * b.y - b.x * c.y) - (c.x * a.y - a.x * c.y) + (b.x * a.y - a.x * b.y);
+	}
+	
+	/**
+	 * 判断点是否在一个矩形范围内（矩形可旋转）点必须是顺时针
+	 * @param	a		点a
+	 * @param	b		点b
+	 * @param	c		点c
+	 * @param	d		点d
+	 * @param	p		点坐标
+	 * @return	是否在一个矩形范围内
+	 */
+	public static function isInsideSquare(a:Point, b:Point, c:Point, d:Point, p:Point):Boolean
+	{
+		if (triangleArea(a, b, p) > 0 || 
+			triangleArea(b, c, p) > 0 || 
+			triangleArea(c, d, p) > 0 || 
+			triangleArea(d, a, p) > 0) 
+			return false;
+		return true;
 	}
 }
 }
