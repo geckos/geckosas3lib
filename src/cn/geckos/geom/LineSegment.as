@@ -219,7 +219,7 @@ public class LineSegment implements ICloneable
 	 */
     public function getLineObj():Object
 	{
-		return {slope:this.getLineSlope(), intercept:this.getIntercept()};
+		return { slope:this.getLineSlope(), intercept:this.getIntercept() };
 	}
 	
 	
@@ -283,23 +283,41 @@ public class LineSegment implements ICloneable
 	 * @param	line
 	 * @return
 	 */
-    public function getIntersectionPoint(line:LineSegment):Object
+    public function getIntersectionPoint(line:LineSegment):Vector2D
 	{
 		if(this.getRelation(line) != LINE_UNEXPECTED)
 			return null;
-			
+		
 		var lineA:Object = this.getLineObj();
 		var lineB:Object = line.getLineObj();
-	
+		
 		var slopeA:Number = lineA.slope;
 		var slopeB:Number = lineB.slope;
 	
+		if (slopeA == -Infinity || 
+			slopeA == Infinity)
+		{
+			//线段slopeA垂直 找到slopeB的交叉点
+			if (slopeB == 0)
+			{
+				//另一条线为水平
+				return new Vector2D(this.startPoint.x, line.startPoint.y);
+			}
+		}
+		if (slopeB == -Infinity || 
+			slopeB == Infinity)
+		{
+			//线段slopeB垂直 找到slopeA的交叉点
+			if (slopeA == 0)
+			{
+				//另一条线为水平
+				return new Vector2D(line.startPoint.x, this.startPoint.y);
+			}
+		}
 		var interceptA:Number = lineA.intercept;
 		var interceptB:Number = lineB.intercept;
-	
 		var tempX:Number = (interceptB - interceptA) / (slopeA - slopeB);
 		var tempY:Number = slopeA * tempX + interceptA;
-	
 		return new Vector2D(tempX, tempY);
 	}
 	
@@ -311,10 +329,9 @@ public class LineSegment implements ICloneable
 	 */
     public function isIntersection(line:LineSegment):Boolean
 	{
-		var value:Object = this.getIntersectionPoint(line);
+		var value:Vector2D = this.getIntersectionPoint(line);
 		if (!value) return false;
-		var point:Vector2D = value as Vector2D;
-		return this.isContainPoint(point);
+		return this.isContainPoint(value);
 	}
 
 	
