@@ -393,5 +393,44 @@ public class MathUtil
 			return false;
 		return true;
 	}
+	
+	/**
+	 * 求线段交点	参考（http://fins.iteye.com/blog/1522259）
+	 * @param	a		线段A的顶点1
+	 * @param	b		线段A的顶点2	
+	 * @param	c		线段B的顶点1
+	 * @param	d		线段B的顶点2
+	 * @return	交点
+	 */
+	public static function segmentsIntr(a:Point, b:Point, c:Point, d:Point):Point
+	{  
+		// 三角形abc 面积的2倍  
+		var area_abc:Number = (a.x - c.x) * (b.y - c.y) - (a.y - c.y) * (b.x - c.x);  
+	  
+		// 三角形abd 面积的2倍  
+		var area_abd:Number = (a.x - d.x) * (b.y - d.y) - (a.y - d.y) * (b.x - d.x);   
+	  
+		// 面积符号相同则两点在线段同侧,不相交 (对点在线段上的情况,本例当作不相交处理);  
+		if ( area_abc * area_abd >= 0 ) 
+		{  
+			return null;  
+		}  
+	  
+		// 三角形cda 面积的2倍  
+		var area_cda:Number = (c.x - a.x) * (d.y - a.y) - (c.y - a.y) * (d.x - a.x);  
+		// 三角形cdb 面积的2倍  
+		// 注意: 这里有一个小优化.不需要再用公式计算面积,而是通过已知的三个面积加减得出.  
+		var area_cdb:Number = area_cda + area_abc - area_abd;  
+		if (  area_cda * area_cdb >= 0 ) 
+		{  
+			return null;  
+		}  
+	  
+		//计算交点坐标  
+		var t:Number = area_cda / ( area_abd - area_abc );
+		var dx:Number = t * (b.x - a.x);
+		var dy:Number = t * (b.y - a.y);
+		return new Point(a.x + dx , a.y + dy);
+	}  
 }
 }
