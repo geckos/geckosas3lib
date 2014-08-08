@@ -431,6 +431,20 @@ public class MathUtil
 		var dx:Number = t * (b.x - a.x);
 		var dy:Number = t * (b.y - a.y);
 		return new Point(a.x + dx , a.y + dy);
-	}  
+	}
+	
+	/**
+	 * 获取角度象限值
+	 * @param	angle	角度
+	 * @return	象限值
+	 */
+	public static function getAngleQuadrant(angle:Number):int
+	{
+		angle = MathUtil.fixAngle(angle);
+		if (angle >= 0 && angle < 90) return 1;
+		if (angle >= 90 && angle < 180) return 2;
+		if (angle >= 180 && angle < 270) return 3;
+		return 4;
+	}
 }
 }
