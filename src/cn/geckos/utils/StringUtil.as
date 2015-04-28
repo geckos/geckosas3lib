@@ -243,7 +243,7 @@ public final class StringUtil
     public static function zfill(str:String, width:uint = 2):String
     {
         if( !str ) {
-            str;
+            return str;
         }
         
         var slen:Number = str.length;
