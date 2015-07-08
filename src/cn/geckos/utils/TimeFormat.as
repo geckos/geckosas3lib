@@ -53,7 +53,7 @@ public final class TimeFormat
      * 用法2 trace(MillisecondTransform.timeToMillisecond("00.60.00","."))
      * 输出   3600000
      */
-    public static function timeToMillisecond(time:String, partition:String = ":", strict:Boolean=true):String
+    public static function timeToMillisecond(time:String, partition:String = ":"):String
     {
         var _ary:Array = time.split(partition);
         var timeNum:int = 0;
@@ -61,15 +61,6 @@ public final class TimeFormat
         for (var i:uint = 0; i < len; i++)
         {
             var n:Number = _ary[i];
-            if (strict) 
-            {
-                if (i == 0 && (n > 12 || n < 0)) 
-                    throw new Error("The hour section must be lower or equal than 12 and greater or equal than 0!");
-                else if (i == 1 && (n > 59 || n < 0)) 
-                    throw new Error("The minute section must be lower or equal than 12 and greater or equal than 0!");
-                else if (i == 2 && (n > 59 || n < 0)) 
-                    throw new Error("The second section must be lower or equal than 12 and greater or equal than 0!");
-            }
             timeNum += n * Math.pow(60, (len - 1 - i));
         }
         timeNum *= 1000;

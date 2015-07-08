@@ -1,6 +1,6 @@
 ﻿package cn.geckos.utils
 {
-	import flash.utils.ByteArray;
+import flash.utils.ByteArray;
 public final class StringUtil
 {
     /**
