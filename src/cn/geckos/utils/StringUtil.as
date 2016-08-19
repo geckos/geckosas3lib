@@ -486,5 +486,53 @@ public final class StringUtil
 		return newStr;
 	}
 	
+	/**
+	 * 转换数字
+	 * @param	num
+	 * @return	将 1000 转换为 1k
+	 */
+	public static function convertNum(num:Number):String
+	{
+		num = Math.floor(num);
+		var str:String = "";
+		var n:Number;
+		var d:int = 0;
+		var k:int = 0;
+		var m:int = 0;
+		var b:int = 0;
+		
+		d = num % 1000;
+		num /= 1000;
+		
+		k = num % 1000;
+		num /= 1000;
+		
+		m = num % 1000;
+		num /= 1000;
+		
+		b = int(num);
+		
+		if (b > 0)
+			str = b.toString() + "B";
+		if (m > 0)
+		{
+			n = m + (k / 100) * 0.1;
+			str = str + n.toString() + "M";
+		}
+		else if(b == 0 && m == 0)
+		{
+			if (k > 0)
+			{
+				n = k + (d / 100) * 0.1;
+				str += str + n.toString() + "K";
+			}
+			else
+			{
+				str = d.toString();
+			}
+		}
+		//trace(d, k, m, b);
+		return str
+	}
 }
 }
