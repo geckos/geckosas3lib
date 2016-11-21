@@ -467,7 +467,7 @@ public class MathUtil
 		else
 		{
 			return new Point(tileWidth / 2 * (tileWidth + tilePos.x - tilePos.y - 1),
-							 tileHeight / 2 * (mapSizeHeight * 2 - pos.x - pos.y) - 2);
+							 tileHeight / 2 * (mapHeight * 2 - pos.x - pos.y) - 2);
 		}
 	}
 }
