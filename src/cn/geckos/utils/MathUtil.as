@@ -446,5 +446,29 @@ public class MathUtil
 		if (angle >= 180 && angle < 270) return 3;
 		return 4;
 	}
+	
+	/**
+	 * 根据瓦片地图的瓦片坐标计算出改瓦片所在的真实世界的坐标
+	 * @param	tilePos			瓦片坐标
+	 * @param	tileWidth		瓦片的宽度
+	 * @param	tileHeight		瓦片的高度
+	 * @param	mapWidth		瓦片地图的宽度（瓦片横向总数量）
+	 * @param	mapHeight		瓦片地图的高度（瓦片纵向总数量）
+	 * @param	isCartesian		是否是笛卡尔积坐标系
+	 * @return
+	 */
+	public static function getPositionForIsoAt(tilePos:Point, tileWidth:uint, tileHeight:uint, mapWidth:uint, mapHeight:uint, isCartesian:Boolean = true):Point
+	{
+		if (isCartesian)
+		{
+			return new Point(tileWidth / 2 * (tileWidth + tilePos.x - tilePos.y - 1),
+							 tileHeight / 2 * (pos.x + pos.y) - 2);
+		}
+		else
+		{
+			return new Point(tileWidth / 2 * (tileWidth + tilePos.x - tilePos.y - 1),
+							 tileHeight / 2 * (mapSizeHeight * 2 - pos.x - pos.y) - 2);
+		}
+	}
 }
 }
