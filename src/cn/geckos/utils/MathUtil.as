@@ -462,12 +462,12 @@ public class MathUtil
 		if (isCartesian)
 		{
 			return new Point(tileWidth / 2 * (tileWidth + tilePos.x - tilePos.y - 1),
-							 tileHeight / 2 * (pos.x + pos.y) - 2);
+							 tileHeight / 2 * (tilePos.x + tilePos.y) - 2);
 		}
 		else
 		{
 			return new Point(tileWidth / 2 * (tileWidth + tilePos.x - tilePos.y - 1),
-							 tileHeight / 2 * (mapHeight * 2 - pos.x - pos.y) - 2);
+							 tileHeight / 2 * (mapHeight * 2 - tilePos.x - tilePos.y) - 2);
 		}
 	}
 }
