@@ -102,7 +102,8 @@ public class MathUtil
      */
     public static function round(num:Number, interval:Number = .1):Number
     {
-        return Math.round(num / interval) * interval;
+		var intervalValue:Number = 1 / interval;
+        return Math.round(num / interval) / intervalValue;
     }
 	
 	/**
@@ -113,7 +114,8 @@ public class MathUtil
      */
     public static function floor(num:Number, interval:Number = .1):Number
     {
-        return Math.floor(num / interval) * interval;
+		var intervalValue:Number = 1 / interval;
+        return Math.floor(num / interval) / intervalValue;
     }
 	
 	/**
@@ -124,7 +126,8 @@ public class MathUtil
      */
     public static function ceil(num:Number, interval:Number = .1):Number
     {
-        return Math.ceil(num / interval) * interval;
+		var intervalValue:Number = 1 / interval;
+        return Math.ceil(num / interval) / intervalValue;
     }
 	
 	/**
