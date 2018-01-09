@@ -473,5 +473,32 @@ public class MathUtil
 							 tileHeight / 2 * (mapTileHeight * 2 - tilePos.x - tilePos.y) - 2);
 		}
 	}
+	
+	/**
+	 * 将数字四舍五入为输入的最接近的倍数。 例如，四舍五入
+	 * 16到最接近的10，您将收到20.类似于内置函数Math.round（）。
+	 * @param	number		需要四舍五入的数字
+	 * @param	nearest		必须找到其倍数的数字
+	 * @return	接近的倍数
+	 */
+	public static function roundToNearest(number:Number, nearest:Number = 1):Number
+	{
+		if(nearest == 0) return number;
+		var roundedNumber:Number = Math.round(MathUtil.roundToPrecision(number / nearest, 10)) * nearest;
+		return roundToPrecision(roundedNumber, 10);
+	}
+	
+	/**
+	 * 四舍五入到一定的精确度。 用于限制数量
+	 * 小数部分的小数位数。
+	 * @param	number		输入数字四舍五入。
+	 * @param	precision	要保留的小数位数
+	 * @return	如果不需要舍入，则舍入数字或原始输入
+	 */
+	public static function roundToPrecision(number:Number, precision:int = 0):Number
+	{
+		var decimalPlaces:Number = Math.pow(10, precision);
+		return Math.round(decimalPlaces * number) / decimalPlaces;
+	}
 }
 }
