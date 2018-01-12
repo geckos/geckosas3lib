@@ -21,12 +21,12 @@ public class LineSegment implements ICloneable
 	private static var LINE_OVERLAP:String = "overlap";//覆盖
 	
 	private static var LINE_UNEXPECTED:String = "unexpected";//其它
-	
-	
+	//起始点
 	private var startPoint:Vector2D;
-	
+	//结束点
 	private var endPoint:Vector2D;
-	
+	//无穷大
+	private const infinity:Number = 999999999;
 	
 	/**
 	 * 初始化
@@ -314,8 +314,24 @@ public class LineSegment implements ICloneable
 				return new Vector2D(line.startPoint.x, this.startPoint.y);
 			}
 		}
+		
 		var interceptA:Number = lineA.intercept;
 		var interceptB:Number = lineB.intercept;
+		
+		//防止在线条垂直时 斜率无穷大导致无法计算出交点
+		if (slopeA == -Infinity) slopeA = -this.infinity;
+		if (slopeA == Infinity) slopeA = this.infinity;
+		
+		if (slopeB == -Infinity) slopeB = -this.infinity;
+		if (slopeB == Infinity) slopeB = this.infinity;
+		
+		if (interceptA == -Infinity || 
+			interceptA == Infinity) interceptA = -slopeA * 100;
+		
+		if (interceptB == -Infinity || 
+			interceptB == Infinity) interceptB = -slopeB * 100;
+		
+
 		var tempX:Number = (interceptB - interceptA) / (slopeA - slopeB);
 		var tempY:Number = slopeA * tempX + interceptA;
 		return new Vector2D(tempX, tempY);
