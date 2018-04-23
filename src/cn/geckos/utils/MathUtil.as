@@ -454,7 +454,7 @@ public class MathUtil
 	 * 根据瓦片地图的瓦片坐标计算出改瓦片所在的真实世界的坐标
 	 * @param	tilePos			瓦片坐标
 	 * @param	tileWidth		瓦片的宽度
-	 * @param	tileHeight		瓦片的高度
+	 * @param	tileHeight		瓦片的高度(小地图一个tile的像素)
 	 * @param	mapTileWidth	瓦片地图的宽度（瓦片横向总数量）
 	 * @param	mapTileHeight	瓦片地图的高度（瓦片纵向总数量）
 	 * @param	isCartesian		是否是笛卡尔积坐标系
@@ -472,6 +472,46 @@ public class MathUtil
 			return new Point(tileWidth / 2 * (mapTileWidth + tilePos.x - tilePos.y - 1),
 							 tileHeight / 2 * (mapTileHeight * 2 - tilePos.x - tilePos.y) - 2);
 		}
+	}
+	
+	/**
+	 * 根据坐标获取瓦片坐标（非像素位置）
+	 * @param	positon			实际坐标
+	 * @param	tileWidth		瓦片的宽度
+	 * @param	tileHeight		瓦片的高度
+	 * @param	mapTileWidth	瓦片地图的宽度（瓦片横向总数量）
+	 * @param	mapTileHeight	瓦片地图的高度（瓦片纵向总数量）
+	 * @return
+	 */
+	public static function getTilePositionAt(positon:Point,  tileWidth:Number, tileHeight:Number, mapTileWidth:uint, mapTileHeight:uint, isCartesian:Boolean = true):Point
+	{
+		if (positon.x < 0) positon.x = 0;
+		if (positon.y < 0) positon.y = 0;
+		var titleX:Number;
+		var titleY:Number;
+		/*trace("positon.x", positon.x)
+		trace("tileWidth / 2", tileWidth / 2)
+		var a = positon.x / (tileWidth / 2)
+		var b = (positon.y + 2) / (tileHeight / 2)
+		trace("a = ", a);
+		trace("b = ", b);
+		trace("c = ", (a + b - mapTileWidth + 1))*/
+		if (isCartesian)
+		{
+			titleX = ((positon.x / (tileWidth / 2)) + ((positon.y + 2) / (tileHeight / 2)) - mapTileWidth + 1) / 2;
+			titleY = ((positon.y + 2) / (tileHeight / 2) - (positon.x / (tileWidth / 2)) - 1 + mapTileWidth) / 2;
+		}
+		else
+		{
+			titleX = (positon.x / (tileWidth / 2) + 1 + mapTileHeight * 2 - (positon.y + 2) / (tileHeight / 2)) / 2;
+			titleY = (mapTileHeight * 2 - ((positon.y + 2) / (tileHeight / 2)) - (positon.x / (tileWidth / 2)) - 1 - mapTileHeight) / 2;
+		}
+		trace(titleX, titleY)
+		titleX = Math.max(0, titleX)
+		titleX = Math.min(titleX, mapTileWidth)
+		titleY = Math.max(0, titleY)
+		titleY = Math.min(titleY, mapTileHeight)
+		return new Point(titleX, titleY)
 	}
 	
 	/**
