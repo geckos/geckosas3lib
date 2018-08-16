@@ -481,7 +481,7 @@ public class MathUtil
 	 * @param	tileHeight		瓦片的高度
 	 * @param	mapTileWidth	瓦片地图的宽度（瓦片横向总数量）
 	 * @param	mapTileHeight	瓦片地图的高度（瓦片纵向总数量）
-	 * @return
+	 * @return	瓦片坐标系坐标
 	 */
 	public static function getTilePositionAt(positon:Point,  tileWidth:Number, tileHeight:Number, mapTileWidth:uint, mapTileHeight:uint, isCartesian:Boolean = true):Point
 	{
@@ -489,13 +489,6 @@ public class MathUtil
 		if (positon.y < 0) positon.y = 0;
 		var titleX:Number;
 		var titleY:Number;
-		/*trace("positon.x", positon.x)
-		trace("tileWidth / 2", tileWidth / 2)
-		var a = positon.x / (tileWidth / 2)
-		var b = (positon.y + 2) / (tileHeight / 2)
-		trace("a = ", a);
-		trace("b = ", b);
-		trace("c = ", (a + b - mapTileWidth + 1))*/
 		if (isCartesian)
 		{
 			titleX = ((positon.x / (tileWidth / 2)) + ((positon.y + 2) / (tileHeight / 2)) - mapTileWidth + 1) / 2;
@@ -506,7 +499,6 @@ public class MathUtil
 			titleX = (positon.x / (tileWidth / 2) + 1 + mapTileHeight * 2 - (positon.y + 2) / (tileHeight / 2)) / 2;
 			titleY = (mapTileHeight * 2 - ((positon.y + 2) / (tileHeight / 2)) - (positon.x / (tileWidth / 2)) - 1 - mapTileHeight) / 2;
 		}
-		trace(titleX, titleY)
 		titleX = Math.max(0, titleX)
 		titleX = Math.min(titleX, mapTileWidth)
 		titleY = Math.max(0, titleY)

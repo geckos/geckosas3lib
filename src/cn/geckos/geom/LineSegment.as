@@ -22,9 +22,9 @@ public class LineSegment implements ICloneable
 	
 	private static var LINE_UNEXPECTED:String = "unexpected";//其它
 	//起始点
-	private var startPoint:Vector2D;
+	public var startPoint:Vector2D;
 	//结束点
-	private var endPoint:Vector2D;
+	public var endPoint:Vector2D;
 	//无穷大
 	private const infinity:Number = 999999999;
 	
@@ -396,5 +396,25 @@ public class LineSegment implements ICloneable
 			return false;
 		return true;
 	}
+	
+	/**
+	 * 判断线段到一个圆是否有碰撞
+	 * @param	circleCenter	圆心
+	 * @param	circleRadius	半径
+	 * @param	segmentStart	线段起始点
+	 * @param	segmentEnd		线段结束点
+	 * @return	是否碰撞
+	 */
+	public function distToSegmentSquared(circleCenter:Vector2D, circleRadius:Number, 
+										 segmentStart:Vector2D, segmentEnd:Vector2D):Boolean
+	{
+        var l2:Number = segmentStart.dist2(segmentEnd);
+        var t:Number = ((circleCenter.x - segmentStart.x) * (segmentEnd.x - segmentStart.x) + (circleCenter.y - segmentStart.y) * (segmentEnd.y - segmentStart.y)) / l2;
+        t = Math.max(0, Math.min(1, t));
+        var tX:Number = segmentStart.x + t * (segmentEnd.x - segmentStart.x);
+        var tY:Number = segmentStart.y + t * (segmentEnd.y - segmentStart.y);
+		var v2d:Vector2D = new Vector2D(tX, tY);
+        return v2d.dist2(circleCenter) < circleRadius * circleRadius;
+    }
 }
 }
