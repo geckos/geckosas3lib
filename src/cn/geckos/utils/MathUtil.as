@@ -532,5 +532,32 @@ public class MathUtil
 		var decimalPlaces:Number = Math.pow(10, precision);
 		return Math.round(decimalPlaces * number) / decimalPlaces;
 	}
+	
+	/**
+	 * 在数字后面格式化为 k，m，b，t，q，Q，s，S
+	 * @param	value		需要格式化的数字
+	 * @param	interval	保留小数点 
+	 * @return	返回格式化后的字符串形式数字
+	 */
+	public static function convertNumber(value:Number, interval:Number = .1):String
+	{
+		var septillion:Number = 1000000000000000000000000;
+		var sextillion:Number = 1000000000000000000000;
+		var quintillion:Number = 1000000000000000000;
+		var quadrillion:Number = 1000000000000000;
+		var trillion:Number = 1000000000000;
+		var billion:Number = 1000000000;
+		var million:Number = 1000000;
+		var thousand:Number = 1000;
+		if (value > septillion) return round((value / septillion), interval).toString() + "S";
+		else if (value > sextillion) return round((value / sextillion), interval).toString() + "s";
+		else if (value > quintillion) return round((value / quintillion), interval).toString() + "Q";
+		else if (value > quadrillion) return round((value / quadrillion), interval).toString() + "q";
+		else if (value > trillion) return round((value / trillion), interval).toString() + "t";
+		else if (value > billion) return round((value / billion), interval).toString() + "b";
+		else if (value > million) return round((value / million), interval).toString() + "m";
+		else if (value > thousand) return round((value / thousand), interval).toString() + "k";
+		return value.toString();
+	}
 }
 }
