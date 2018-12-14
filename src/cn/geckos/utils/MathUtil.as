@@ -557,7 +557,7 @@ public class MathUtil
 		else if (value > billion) return round((value / billion), interval).toString() + "b";
 		else if (value > million) return round((value / million), interval).toString() + "m";
 		else if (value > thousand) return round((value / thousand), interval).toString() + "k";
-		return value.toString();
+		return round(value, interval).toString();
 	}
 }
 }
