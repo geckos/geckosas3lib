@@ -541,23 +541,15 @@ public class MathUtil
 	 */
 	public static function convertNumber(value:Number, interval:Number = .1):String
 	{
-		var septillion:Number = 1000000000000000000000000;
-		var sextillion:Number = 1000000000000000000000;
-		var quintillion:Number = 1000000000000000000;
-		var quadrillion:Number = 1000000000000000;
-		var trillion:Number = 1000000000000;
-		var billion:Number = 1000000000;
-		var million:Number = 1000000;
-		var thousand:Number = 1000;
-		if (value > septillion) return round((value / septillion), interval).toString() + "S";
-		else if (value > sextillion) return round((value / sextillion), interval).toString() + "s";
-		else if (value > quintillion) return round((value / quintillion), interval).toString() + "Q";
-		else if (value > quadrillion) return round((value / quadrillion), interval).toString() + "q";
-		else if (value > trillion) return round((value / trillion), interval).toString() + "t";
-		else if (value > billion) return round((value / billion), interval).toString() + "b";
-		else if (value > million) return round((value / million), interval).toString() + "m";
-		else if (value > thousand) return round((value / thousand), interval).toString() + "k";
-		return Math.round(value).toString();
+		var arr:Array = ["k", "m", "b", "t", "q", "Q", "s", "S"];
+		var num:Number = Math.pow(10, 24);
+		var multi:Number = 1000;
+		for(var i:Number = arr.length - 1; i >= 0; --i)
+		{
+			if(value > num) return round((value / num), interval).toString() + arr[i];
+			num /= multi;
+		}
+        return Math.round(value).toString();
 	}
 }
 }
