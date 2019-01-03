@@ -148,6 +148,15 @@ public class Random
 	{
 		return (Random.random() < chance) ? true:false;
 	}
+	
+	/**
+	 * 随机字符串
+	 * @return	字符串
+	 */
+	public static function randomString():String
+    {
+        return Math.random().toString(10).substring(2);
+    }
     
 }
 }
