@@ -551,5 +551,21 @@ public class MathUtil
 		}
         return Math.round(value).toString();
 	}
+	
+	/**
+     * 获取向量与向量之间的夹角
+     * @param    p1 向量对象
+     * @param    p2 向量对象
+     * @param    degrees 指定是否返回角度值，默认为true
+     * @reutrn   如果degrees为true，则返回向量夹角的角度值，否则返回向量夹角的弧度值。
+     */
+    public static function angleBetween(p1:Point, p2:Point, degrees:Boolean = true):Number
+    {
+        var dx:Number = p1.x - p2.x;
+        var dy:Number = p1.y - p2.y;
+        var radians:Number =  Math.atan2(dy, dx);
+        if (degrees) return MathUtil.rds2dgs(radians);
+        return radians;
+    }
 }
 }
