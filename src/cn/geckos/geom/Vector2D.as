@@ -217,7 +217,7 @@ public class Vector2D implements ICloneable
      * 
      * @param v 另一向量对象
      * 
-     * @return 当前向量与向量v的点积值
+     * @return 当前向量与向量v的点积值(可用于判断两个向量的位置关系)
      */
     public function dot(v:Vector2D):Number
     {
@@ -259,6 +259,47 @@ public class Vector2D implements ICloneable
 		var x:Number = (v.x + this._x) / 2;
 		var y:Number = (v.y + this._y) / 2;
 		return new Vector2D(x, y);
+	}
+	
+	/**
+	 * 截取当前向量
+	 * @param	max
+	 * @return
+	 */
+	public function truncate(max: Number): Vector2D 
+	{
+		this.length = Math.min(max, this.length);
+		return this;
+	}
+
+	/**
+	 * 反转向量
+	 * @return
+	 */
+    public function reverse(): Vector2D 
+    {
+        this._x = -this._x;
+        this._y = -this._y;
+        return this;
+    }
+
+    /**
+     * 差积   差积=0为垂直
+     * @param	v2
+     * @return
+     */
+    public function crossProd(v2: Vector2D): Number 
+    {
+        return this._x * v2.y - this._y * v2.x;
+    }
+	
+	/**
+	 * 获取这个向量的方向
+	 * @return int 如果在左边返回-1. 如果在右边返回+1.
+	 */
+	public function sign(v2:Vector2D):int
+	{
+		return perp.dot(v2) < 0 ? -1 : 1;
 	}
     
     /**
