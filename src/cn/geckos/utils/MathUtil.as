@@ -568,12 +568,12 @@ public class MathUtil
         return radians;
     }
 	
-	 /**
-	 * 判断 点 是否在 多边形 范围内
-	 * @param point 点x,y 
-	 * @param ps 多边形顶点数组
-	 * @returns boolean
-	 */
+	/**
+	* 判断 点 是否在 多边形 范围内
+	* @param point 点x,y 
+	* @param ps 多边形顶点数组
+	* @returns boolean
+	*/
 	public static function isInPolygon(point:Point, ps:Vector.<Point>):Boolean
     {
 		//http://www.html-js.com/article/1528
@@ -605,5 +605,75 @@ public class MathUtil
 		}
 		return flag;
     }
+	
+	public static function mathSizeByPath(path:Array):Object
+	{
+		var minX:Number;
+		var maxX:Number;
+		var minY:Number;
+		var maxY:Number;
+		var length:int = path.length;
+		for (var i:int = 0; i < length; i += 1) 
+		{
+			var posX:Number = path[i][0];
+			var posY:Number = path[i][1];
+			if (isNaN(minX))
+				minX = posX;
+			else if (posX < minX)
+				minX = posX;
+				
+			if (isNaN(maxX))
+				maxX = posX;
+			else if (posX > maxX)
+				maxX = posX;
+				
+			if (isNaN(minY))
+				minY = posY;
+			else if (posY < minY)
+				minY = posY;
+				
+			if (isNaN(maxY))
+				maxY = posY;
+			else if (posY > maxY)
+				maxY = posY;
+		}
+		var width:Number = (maxX - minX);
+		var height:Number = (maxY - minY);
+		return { "width":width, "height":height, 
+				 "minX":minX, "maxX":maxX,
+				 "minY":minY, "maxY":maxY };
+	}
+	
+	/**
+	 * 查找多边形的中心
+	 * @param	vs    	   多边形顶点坐标
+	 * @param	count      顶点数量
+	 * @return  中心坐标
+	 */
+	private function findCentroid(vs:Vector.<Point>, count:uint):Point
+	{
+		var c:Point = new Point();
+		var area:Number = 0.0;
+		var p1X:Number = 0.0;
+		var p1Y:Number = 0.0;
+		var inv3:Number = 1.0 / 3.0;
+		for (var i:int = 0; i < count; ++i)
+		{
+			var p2:Point = vs[i];
+			var p3:Point = i + 1 < count ? vs[int(i + 1)] : vs[0];
+			var e1X:Number = p2.x - p1X;
+			var e1Y:Number = p2.y - p1Y;
+			var e2X:Number = p3.x - p1X;
+			var e2Y:Number = p3.y - p1Y;
+			var D:Number = (e1X * e2Y - e1Y * e2X);
+			var triangleArea:Number = 0.5 * D;
+			area += triangleArea;
+			c.x += triangleArea * inv3 * (p1X + p2.x + p3.x);
+			c.y += triangleArea * inv3 * (p1Y + p2.y + p3.y);
+		}
+		c.x *= 1.0 / area;
+		c.y *= 1.0 / area;
+		return c;
+	}
 }
 }
