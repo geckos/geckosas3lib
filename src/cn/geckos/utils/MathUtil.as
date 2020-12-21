@@ -606,6 +606,11 @@ public class MathUtil
 		return flag;
     }
 	
+	/**
+	 * 根据坐标计算这个坐标形成的图形的尺寸高宽
+	 * @param	path 路径列表 二维数组[[x,y],[x,y]]
+	 * @return  尺寸对象
+	 */
 	public static function mathSizeByPath(path:Array):Object
 	{
 		var minX:Number;
@@ -650,7 +655,7 @@ public class MathUtil
 	 * @param	count      顶点数量
 	 * @return  中心坐标
 	 */
-	private function findCentroid(vs:Vector.<Point>, count:uint):Point
+	public static function findCentroid(vs:Vector.<Point>, count:uint):Point
 	{
 		var c:Point = new Point();
 		var area:Number = 0.0;
@@ -675,5 +680,39 @@ public class MathUtil
 		c.y *= 1.0 / area;
 		return c;
 	}
+	
+	/**
+     * 计算点到直线的距离。如果这是一条线段并且垂足不在线段内，则会计算点到线段端点的距离。
+     * @method pointLineDistance
+     * @param point - The point
+     * @param start - The start point of line
+     * @param end - The end point of line
+     * @param isSegment - whether this line is a segment
+     * @return {number}
+     */
+	 public static function pointLineDistance(point:Point, start:Point, end:Point, isSegment:Boolean):Number 
+    {
+        var dx:Number = end.x - start.x;
+        var dy:Number = end.y - start.y;
+        var d:Number = dx*dx + dy*dy;
+        var t:Number = ((point.x - start.x) * dx + (point.y - start.y) * dy) / d;
+        var p:Point;
+        if (!isSegment) {
+            p = new Point(start.x + t * dx, start.y + t * dy);
+        }
+        else {
+            if (d) {
+                if (t < 0) p = start;
+                else if (t > 1) p = end;
+                else p = new Point(start.x + t * dx, start.y + t * dy);
+            }
+            else {
+                p = start;
+            }
+        }
+        dx = point.x - p.x;
+        dy = point.y - p.y;
+        return Math.sqrt(dx*dx + dy*dy);
+    }
 }
 }
