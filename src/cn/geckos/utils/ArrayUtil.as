@@ -264,7 +264,7 @@ public final class ArrayUtil
 	 * @param	ary	列表
 	 * @return	最小值
 	 */
-	public function getLowestValue(ary:Array):Number
+	public static function getLowestValue(ary:Array):Number
 	{
 		return ary[ary.sort(16 | 8)[0]];
 	}
@@ -274,7 +274,7 @@ public final class ArrayUtil
 	 * @param	ary	列表
 	 * @return	最大值
 	 */
-	public function getHighestValue(ary:Array):Number
+	public static function getHighestValue(ary:Array):Number
 	{
 		return ary[ary.sort(16 | 8)[ary.length - 1]];
 	}
@@ -285,7 +285,7 @@ public final class ArrayUtil
      * @param	value   插入的元素
      * @return  插入的元素 未插入则返回空
      */
-    public function insert(ary:Array, index:int, value:*):*
+    public static function insert(ary:Array, index:int, value:*):*
     {
         if (!ary) return null;
         var length:int = ary.length;
@@ -303,6 +303,66 @@ public final class ArrayUtil
         }
         return value;
     }
+	
+	/**
+	 * 逆时针旋转 90 度
+	 * 列 = 行
+	 * 行 = n - 1 - 列(j);  n表示总行数
+	 */
+	public static function rotate90(matrix:Array):Array 
+	{
+		var temp:Array = [];
+		var len:Number = matrix.length;
+		for(var i:Number = 0; i < len; i++){
+			for(var j:Number = 0; j < len; j++){
+				var k:Number = len - 1 -j;
+				if(!temp[k]){
+					temp[k] = [];
+				}
+				temp[k][i] = matrix[i][j];
+			}
+		}
+		return temp;
+	}
+
+	//逆时针旋转 180 度
+    //行 = h - 1 - 行(i);  h表示总行数
+    //列 = n - 1 - 列(j);  n表示总列数
+	public static function rotate180(matrix:Array):Array 
+	{
+		var temp:Array = [];
+		var len:Number = matrix.length;
+		for(var i:Number = 0; i < len; i++) {
+			for(var j:Number = 0; j < len; j++) {
+				var k:Number = len - 1 - i;
+				if(!temp[k]) {
+					temp[k] = [];
+				}
+				temp[k][len-1-j] = matrix[i][j];
+			}
+		}
+	
+		return temp;
+	}
+
+	//逆时针旋转 270 度
+	//行 = 列
+	//列 = n - 1 - 行(i);  n表示总列数
+	public static function rotate270(matrix:Array):Array 
+	{
+		var temp:Array = [];
+		var len:Number = matrix.length;
+		for(var i:Number = 0; i < len; i++) {
+			for(var j:Number = 0; j < len; j++) {
+				var k:Number = len - 1 - i;
+				if(!temp[j]){
+					temp[j] = [];
+				}
+				temp[j][k] = matrix[i][j];
+			}
+		}
+		return temp;
+	};
 }
 }
 
